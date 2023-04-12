@@ -9,5 +9,4 @@ html {
 body {
     @apply h-full;
     @apply w-full;
-    @apply overflow-hidden;
 }
