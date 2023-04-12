@@ -7,9 +7,12 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSupabase } from "../supabase-provider";
-import { SignUpWithPasswordCredentials } from "@supabase/supabase-js";
+import {
+  SignInWithPasswordCredentials,
+  SignUpWithPasswordCredentials,
+} from "@supabase/supabase-js";
 
-export default function SignupModal() {
+export default function LoginModal() {
   let [isOpen, setIsOpen] = useState(false);
   const closeModal = useCallback(() => {
     setIsOpen(false);
@@ -20,11 +23,11 @@ export default function SignupModal() {
   }, []);
 
   const { supabase } = useSupabase();
-  const { register, handleSubmit } = useForm<SignUpWithPasswordCredentials>();
+  const { register, handleSubmit } = useForm<SignInWithPasswordCredentials>();
 
   const submitSignup = useCallback(
     handleSubmit(async (values) => {
-      const result = await supabase.auth.signUp(values);
+      const result = await supabase.auth.signInWithPassword(values);
       return result;
     }),
     [handleSubmit]
@@ -32,9 +35,7 @@ export default function SignupModal() {
 
   return (
     <>
-      <Button variant="secondary" onClick={openModal}>
-        Sign up
-      </Button>
+      <Button onClick={openModal}>Login</Button>
 
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={closeModal}>
@@ -66,7 +67,7 @@ export default function SignupModal() {
                     as="h3"
                     className="text-lg font-medium leading-6 text-white"
                   >
-                    Sign up to Save Progress!
+                    Login
                   </Dialog.Title>
                   <form onSubmit={submitSignup}>
                     <div className="mt-2 flex flex-col gap-2">
@@ -84,7 +85,7 @@ export default function SignupModal() {
 
                     <div className="mt-4 flex w-full justify-end">
                       <Button type="submit" onClick={closeModal}>
-                        Sign up
+                        Login
                       </Button>
                     </div>
                   </form>

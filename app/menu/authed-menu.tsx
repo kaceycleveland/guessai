@@ -1,10 +1,16 @@
 "use client";
 
 import { Menu, Transition } from "@headlessui/react";
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
+import { useSupabase } from "../supabase-provider";
 
 export default function AuthedMenu() {
+  const { supabase } = useSupabase();
+
+  const handleLogout = useCallback(async () => {
+    await supabase.auth.signOut();
+  }, [supabase]);
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
@@ -25,27 +31,17 @@ export default function AuthedMenu() {
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded bg-slate-950 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="px-1 py-1 ">
             <Menu.Item>
               {({ active }) => (
                 <button
                   className={`${
-                    active ? "bg-violet-500 text-white" : "text-gray-900"
-                  } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                    active ? "bg-violet-500" : ""
+                  } group flex w-full items-center rounded-md px-2 py-2 text-sm text-white`}
+                  onClick={handleLogout}
                 >
-                  Edit
-                </button>
-              )}
-            </Menu.Item>
-            <Menu.Item>
-              {({ active }) => (
-                <button
-                  className={`${
-                    active ? "bg-violet-500 text-white" : "text-gray-900"
-                  } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                >
-                  Duplicate
+                  Logout
                 </button>
               )}
             </Menu.Item>
@@ -55,34 +51,10 @@ export default function AuthedMenu() {
               {({ active }) => (
                 <button
                   className={`${
-                    active ? "bg-violet-500 text-white" : "text-gray-900"
-                  } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                    active ? "bg-violet-500" : ""
+                  } group flex w-full items-center rounded-md px-2 py-2 text-sm text-white`}
                 >
                   Archive
-                </button>
-              )}
-            </Menu.Item>
-            <Menu.Item>
-              {({ active }) => (
-                <button
-                  className={`${
-                    active ? "bg-violet-500 text-white" : "text-gray-900"
-                  } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                >
-                  Move
-                </button>
-              )}
-            </Menu.Item>
-          </div>
-          <div className="px-1 py-1">
-            <Menu.Item>
-              {({ active }) => (
-                <button
-                  className={`${
-                    active ? "bg-violet-500 text-white" : "text-gray-900"
-                  } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                >
-                  Delete
                 </button>
               )}
             </Menu.Item>
