@@ -9,6 +9,8 @@ import { narrowItems } from "@/lib/utils/narrow-items";
 import { createGame } from "@/lib/create-game";
 import { getCurrentDate } from "@/lib/utils/get-current-date";
 
+export const dynamic = "force-dynamic";
+
 export async function POST(request: NextRequest) {
   const { word }: GuessWord = await request.json();
   const { data: currentDate } = await getCurrentDate();

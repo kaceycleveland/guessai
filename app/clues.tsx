@@ -5,7 +5,7 @@ import { SupabaseAdminClient } from "@/lib/supabase-admin-client";
 import { narrowItems } from "@/lib/utils/narrow-items";
 import { GAME_COOKIE } from "@/lib/api/cookie-game";
 import ClueRender from "./clue-render";
-import { CluesArray } from "@/types/ordered-clues";
+import { CluesArray, OrderedClues } from "@/types/ordered-clues";
 import { getCurrentDate } from "@/lib/utils/get-current-date";
 
 export const revalidate = 0;
@@ -68,7 +68,6 @@ export default async function Clues() {
     if (updateGameToUser.error) throw new Error("User failed to update.");
   }
 
-  let clues;
   let givenClues;
   // Get the given clues for the game
   if (userData.user?.id) {
@@ -123,6 +122,7 @@ export default async function Clues() {
       .eq("date", currentDate);
   }
 
+  let clues: OrderedClues = firstClues.map((clue) => ({ clue }));
   // Type narrow the given clues and guesses
   if (givenClues?.data?.length) {
     const narrowedGuesses = narrowItems(givenClues.data[0].guesses);
@@ -150,7 +150,7 @@ export default async function Clues() {
     <div className="w-full px-2">
       {/* <button onClick={addClue}>Next Clue</button> */}
       <div className="relative w-full flex flex-col gap-4">
-        <ClueRender body={clues} firstClues={firstClues} />
+        <ClueRender body={clues} />
         {/* {visibleClues.map((clue, index) => {
           return (
             <Clue

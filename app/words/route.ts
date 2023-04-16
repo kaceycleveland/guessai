@@ -14,6 +14,8 @@ import { Database } from "@/lib/database.types";
 import { hasPermission } from "@/lib/permissions/has-permission";
 import { SupabaseAdminClient } from "@/lib/supabase-admin-client";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   const supabase = createRouteHandlerSupabaseClient<Database>({
     headers,

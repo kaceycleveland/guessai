@@ -28,17 +28,16 @@ export default function LoginModal({
     postGameAssignment,
     { onSuccess: router.refresh }
   );
-  const { register, handleSubmit } = useForm<SignInWithPasswordCredentials>();
+  const { register, handleSubmit, formState } =
+    useForm<SignInWithPasswordCredentials>();
 
   const submitSignup = useCallback(
     handleSubmit(async (values) => {
-      const result = await supabase.auth.signInWithPassword(values).then(() => {
-        trigger().then((res) => {
-          if (res?.data.code) {
-            document.cookie = `${GAME_COOKIE}=;`;
-          }
-        });
-      });
+      const result = await supabase.auth.signInWithPassword(values);
+      const res = await trigger();
+      if (res?.data.code) {
+        document.cookie = `${GAME_COOKIE}=;`;
+      }
       return result;
     }),
     [handleSubmit, trigger]
@@ -61,7 +60,7 @@ export default function LoginModal({
         </div>
 
         <div className="mt-4 flex w-full justify-end">
-          <Button type="submit" onClick={closeModal}>
+          <Button type="submit" disabled={formState.isSubmitting}>
             Login
           </Button>
         </div>

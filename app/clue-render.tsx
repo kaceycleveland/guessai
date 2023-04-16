@@ -21,11 +21,10 @@ const variants: Variants = {
 
 interface ClueRenderProps {
   body?: OrderedClues;
-  firstClues?: CluesArray;
 }
 
-export default function ClueRender({ body, firstClues }: ClueRenderProps) {
-  console.log(body, firstClues);
+export default function ClueRender({ body }: ClueRenderProps) {
+  console.log(body);
   return (
     <motion.div
       variants={variants}
@@ -52,10 +51,6 @@ export default function ClueRender({ body, firstClues }: ClueRenderProps) {
           </>
         );
       })}
-      {!body &&
-        firstClues?.map((clue, index) => (
-          <Clue key={index} clueText={clue.clue ?? ""} />
-        ))}
     </motion.div>
   );
 }

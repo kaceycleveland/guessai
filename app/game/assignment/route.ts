@@ -6,6 +6,8 @@ import { SupabaseAdminClient } from "@/lib/supabase-admin-client";
 import { GAME_COOKIE } from "@/lib/api/cookie-game";
 import { getCurrentDate } from "@/lib/utils/get-current-date";
 
+export const dynamic = "force-dynamic";
+
 export async function POST() {
   const supabase = createRouteHandlerSupabaseClient<Database>({
     headers,
