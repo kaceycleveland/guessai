@@ -11,6 +11,7 @@ import { CluesArray, OrderedClues } from '@/types/ordered-clues';
 import Clues from './clues';
 import GuessBox from './guess-box';
 
+export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 export default async function Page() {

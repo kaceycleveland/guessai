@@ -2,6 +2,7 @@ import { OrderedClues } from '@/types/ordered-clues';
 
 import ClueRender from './clue-render';
 
+export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 interface CluesProps {
