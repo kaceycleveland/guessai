@@ -13,7 +13,7 @@ export const Button = ({ className, variant = 'primary', ...rest }: ButtonProps)
     <button
       className={clsx(
         className,
-        'rounded p-2 font-semibold text-white focus:outline focus:outline-1 transition-colors disabled:pointer-events-none disabled:opacity-60',
+        'rounded p-2 font-semibold text-white transition-colors focus:outline focus:outline-1 disabled:pointer-events-none disabled:opacity-60',
         {
           [primaryClassNames]: variant === 'primary',
           [secondaryClassNames]: variant === 'secondary',

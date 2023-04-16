@@ -45,7 +45,7 @@ export default function ClueRender({ body, total }: ClueRenderProps) {
           <Fragment key={index}>
             <Clue clueText={entry.clue.clue ?? ''} order={entry.clue.sort_order} total={total} />
             {entry.guesses?.length ? (
-              <motion.div layout="size" className="flex gap-2 flex-wrap">
+              <motion.div layout="size" className="flex flex-wrap gap-2">
                 {entry.guesses.map(({ guess, correct }, key) => (
                   <Guess key={key} correct={correct} guess={guess} />
                 ))}

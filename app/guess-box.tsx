@@ -96,7 +96,7 @@ export default function GuessBox({ isClueBlocked, isGuessBlocked, isGameFinished
         />
         <Button
           type="submit"
-          className="p-2 basis-1/4"
+          className="basis-1/4 p-2"
           disabled={isLoading || isGuessBlocked || !formState.isValid || !formState.isDirty}
         >
           Guess
@@ -107,7 +107,7 @@ export default function GuessBox({ isClueBlocked, isGuessBlocked, isGameFinished
 
   if (isDone) {
     bodyContent = (
-      <div className="text-white flex items-center font-bold text-center w-full">
+      <div className="flex w-full items-center text-center font-bold text-white">
         {`You are out of guesses and clues! Check in tomorrow to try again and
     see what today's word was.`}
       </div>
@@ -116,7 +116,7 @@ export default function GuessBox({ isClueBlocked, isGuessBlocked, isGameFinished
 
   if (isGameFinished) {
     bodyContent = (
-      <div className="text-white font-bold text-center w-full">
+      <div className="w-full text-center font-bold text-white">
         <div>
           <span>You guessed it! The word was </span>
           <span className="text-cyan-500">{word}</span>.
@@ -127,7 +127,7 @@ export default function GuessBox({ isClueBlocked, isGuessBlocked, isGameFinished
   }
 
   return (
-    <div className="sticky bottom-4 p-4 bg-slate-950 rounded bg-opacity-90 shadow-lg flex flex-col gap-4">
+    <div className="sticky bottom-4 flex flex-col gap-4 rounded bg-slate-950 bg-opacity-90 p-4 shadow-lg">
       {bodyContent}
     </div>
   );

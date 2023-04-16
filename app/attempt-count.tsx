@@ -29,7 +29,7 @@ export const AttemptCount = forwardRef<HTMLDivElement, AttemptCountProps>(({ max
   return (
     <motion.div
       ref={ref}
-      className={clsx('bg-opacity-40 border border-slate-900 backdrop-blur-lg rounded text-white shadow-md', {
+      className={clsx('rounded border border-slate-900 bg-opacity-40 text-white shadow-md backdrop-blur-lg', {
         'bg-violet-900': maxed,
         'bg-violet-800': !maxed,
       })}

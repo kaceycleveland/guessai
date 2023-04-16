@@ -41,7 +41,7 @@ export const Calendar = ({ currentDate }: CalendarProps) => {
           const words = data ? data.data.dates[format(day, DATE_FORMAT)] : undefined;
           return (
             <div
-              className="p-2 bg-cyan-800 text-white font-bold rounded flex justify-between"
+              className="flex justify-between rounded bg-cyan-800 p-2 font-bold text-white"
               onClick={() => {
                 setActiveDate(day);
                 modalProps.openModal();

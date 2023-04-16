@@ -14,13 +14,13 @@ export interface InputProps extends DetailedHTMLProps<InputHTMLAttributes<HTMLIn
 export const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ className, variant = 'md', labelProps, error, endContent, ...rest }, ref) => {
     return (
-      <div className="w-full relative">
+      <div className="relative w-full">
         {labelProps && <FormLabel {...labelProps} />}
         <input
           ref={ref}
           className={clsx(
             className,
-            'w-full text-white font-semibold bg-slate-800 rounded placeholder:text-slate-400 border focus:outline-slate-700 focus:outline-1 border-transparent',
+            'w-full rounded border border-transparent bg-slate-800 font-semibold text-white placeholder:text-slate-400 focus:outline-1 focus:outline-slate-700',
             {
               'p-3': variant === 'lg',
               'p-2': variant === 'md',
@@ -31,7 +31,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           {...rest}
         />
         {endContent && (
-          <div className="absolute inset-0 flex justify-end items-center pr-2 text-slate-600 font-semibold pointer-events-none">
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-end pr-2 font-semibold text-slate-600">
             {endContent}
           </div>
         )}

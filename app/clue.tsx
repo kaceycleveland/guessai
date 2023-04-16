@@ -27,7 +27,7 @@ export const Clue = forwardRef<HTMLDivElement, ClueProps>(({ clueText, order, to
     <motion.div
       ref={ref}
       className={
-        ' bg-slate-950 bg-opacity-40 border border-slate-900 backdrop-blur-lg rounded text-white shadow-md w-full flex'
+        'flex w-full rounded border border-slate-900 bg-slate-950 bg-opacity-40 text-white shadow-md backdrop-blur-lg'
       }
       layout="size"
       initial="hidden"
@@ -37,7 +37,7 @@ export const Clue = forwardRef<HTMLDivElement, ClueProps>(({ clueText, order, to
         window.scrollTo({ behavior: 'smooth', top: document.body.scrollHeight });
       }}
     >
-      <div className="p-4 flex-1">{clueText}</div>
+      <div className="flex-1 p-4">{clueText}</div>
       <div className="p-4">
         {order + 1}/{total}
       </div>

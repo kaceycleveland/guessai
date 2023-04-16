@@ -40,13 +40,13 @@ export default function GenerateModal({ isOpen, closeModal, openModal }: BasicMo
         <LoadingBackdrop show={isLoading} loadingProps={{ className: 'bg-cyan-300' }} />
         <div className="my-2">
           {data?.data.word && (
-            <div className="text-xl font-bold text-white p-2 rounded bg-slate-900 text-center my-2">
+            <div className="my-2 rounded bg-slate-900 p-2 text-center text-xl font-bold text-white">
               {data.data.word}
             </div>
           )}
           <div className="flex flex-col gap-4">
             {!hasWordData && (
-              <div className="text-white font-bold">{`Press 'reroll' to request a new word and clues from AI.`}</div>
+              <div className="font-bold text-white">{`Press 'reroll' to request a new word and clues from AI.`}</div>
             )}
             {data?.data.clues.map((clue, idx) => (
               <div className="text-white" key={idx}>
@@ -55,7 +55,7 @@ export default function GenerateModal({ isOpen, closeModal, openModal }: BasicMo
             ))}
           </div>
         </div>
-        <div className="flex gap-4 justify-end">
+        <div className="flex justify-end gap-4">
           <Button onClick={handleReroll} disabled={isLoading}>
             Reroll
           </Button>

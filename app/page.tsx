@@ -143,7 +143,7 @@ export default async function Page() {
   const isGuessBlocked = recentClue.guesses?.length === recentClue.clue.max_attempts;
 
   return (
-    <div className="flex flex-col gap-4 w-full max-w-4xl">
+    <div className="flex w-full max-w-4xl flex-col gap-4">
       {/* @ts-ignore */}
       <Clues clues={clues} total={totalCluesAvailable} />
       <GuessBox

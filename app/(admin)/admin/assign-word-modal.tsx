@@ -58,7 +58,7 @@ export default function AssignWordModal({ date, isOpen, closeModal, openModal }:
             return (
               <div
                 key={idx}
-                className={clsx('text-xl font-bold text-white p-2 rounded text-center my-2', {
+                className={clsx('my-2 rounded p-2 text-center text-xl font-bold text-white', {
                   'bg-slate-900': word.id !== activeWordId,
                   'bg-cyan-900': word.id === activeWordId,
                 })}
@@ -69,7 +69,7 @@ export default function AssignWordModal({ date, isOpen, closeModal, openModal }:
             );
           })}
         </div>
-        <div className="flex gap-4 justify-end items-center">
+        <div className="flex items-center justify-end gap-4">
           {isValidating && <Loading className="bg-cyan-500" />}
           <Button variant="secondary" onClick={handleAssignment} disabled={isLoading || !activeWordId}>
             Assign

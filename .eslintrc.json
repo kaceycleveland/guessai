@@ -1,5 +1,5 @@
 {
-  "extends": ["next/core-web-vitals", "plugin:prettier/recommended"],
+  "extends": ["next/core-web-vitals", "plugin:prettier/recommended", "plugin:tailwindcss/recommended"],
   "rules": {
     "no-console": "warn",
     "prettier/prettier": [
@@ -9,5 +9,11 @@
       }
     ]
   },
-  "ignorePatterns": ["node_modules", "build", "dist", "public"]
+  "ignorePatterns": ["node_modules", "build", "dist", "public"],
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx", "*.js"],
+      "parser": "@typescript-eslint/parser"
+    }
+  ]
 }

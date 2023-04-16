@@ -19,14 +19,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body>
         <SupabaseProvider>
-          <main className="min-h-full bg-gradient-to-bl from-indigo-950 to-slate-800 flex flex-col">
+          <main className="flex min-h-full flex-col bg-gradient-to-bl from-indigo-950 to-slate-800">
             {/** @ts-ignore */}
             <Menu />
             <ClientToastContainer theme="dark" limit={2} />
-            <div className="flex-1 flex flex-col justify-center items-center w-full p-4">
+            <div className="flex w-full flex-1 flex-col items-center justify-center p-4">
               <Suspense
                 fallback={
-                  <div className="flex items-center justify-center w-full p-6">
+                  <div className="flex w-full items-center justify-center p-6">
                     <Loading className="bg-cyan-500" />
                   </div>
                 }
