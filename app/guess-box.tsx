@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useCallback, useTransition } from 'react';
+import { useCallback, useMemo, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import useSWRMutation from 'swr/mutation';
@@ -20,6 +20,11 @@ interface GuessBoxProps {
   word?: string;
 }
 
+const guessRequirements = {
+  maxLength: { value: 12, message: 'Your guess must be less than or equal to 13 characters.' },
+  minLength: { value: 2, message: 'Your guess must be more than or equal to 3 characters.' },
+  required: { value: true, message: 'Enter in a guess!' },
+};
 export default function GuessBox({ isClueBlocked, isGuessBlocked, isGameFinished, word }: GuessBoxProps) {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
@@ -40,8 +45,10 @@ export default function GuessBox({ isClueBlocked, isGuessBlocked, isGameFinished
   }, [getClue]);
 
   const { trigger: postGuess, isMutating: isLoadingGuess } = useSWRMutation(postGameGuessKey, postGameGuess);
-  const { register, formState, handleSubmit, reset } = useForm<GuessWord>();
+  const { register, formState, handleSubmit, reset } = useForm<GuessWord>({ mode: 'all' });
+  const errors = useMemo(() => formState.errors, [formState]);
 
+  console.log('errors', errors);
   const handleGuess = useCallback(
     handleSubmit(async (guessBody) => {
       const body = await postGuess(guessBody);
@@ -82,7 +89,9 @@ export default function GuessBox({ isClueBlocked, isGuessBlocked, isGameFinished
           id="word"
           type="text"
           placeholder="Guess a word"
-          {...register('word', { maxLength: 12, minLength: 2, required: true })}
+          error={errors['word']?.message}
+          endContent={errors['word']?.message}
+          {...register('word', guessRequirements)}
         />
         <Button
           type="submit"

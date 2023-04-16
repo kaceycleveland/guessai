@@ -10,6 +10,8 @@ import { getCurrentDate } from '@/lib/utils/get-current-date';
 import { narrowItems } from '@/lib/utils/narrow-items';
 import { GuessWord } from '@/types/guess-word';
 
+import { POST as postNewClue } from '../clue/route';
+
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
@@ -149,12 +151,19 @@ export async function POST(request: NextRequest) {
       `Guessing on game ${gameId} guess '${word}' with correct status '${correct}' with ${givenClue.guesses.length} guesses and ${givenClue.clue.max_attempts} max guesses`
     );
 
-    await SupabaseAdminClient.from('guesses').insert({
+    const guessInsertQuery = await SupabaseAdminClient.from('guesses').insert({
       guess: word,
       correct,
       given_clue_id: givenClueId,
       game_id: gameId,
     });
+
+    if (guessInsertQuery.error) return NextResponse.json({ message: guessInsertQuery.error.message }, { status: 500 });
+
+    if (givenClue.guesses.length + 1 >= givenClue.clue.max_attempts) {
+      const result = await postNewClue();
+      if (!result.ok) return result;
+    }
 
     return NextResponse.json({ correct, word });
   }
