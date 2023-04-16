@@ -26,9 +26,7 @@ export const Clue = forwardRef<HTMLDivElement, ClueProps>(({ clueText, order, to
   return (
     <motion.div
       ref={ref}
-      className={
-        'flex w-full rounded border border-slate-900 bg-slate-950 bg-opacity-40 text-white shadow-md backdrop-blur-lg'
-      }
+      className={'flex w-full rounded border border-slate-900 bg-slate-950/40 text-white shadow-md backdrop-blur-lg'}
       layout="size"
       initial="hidden"
       animate="visible"

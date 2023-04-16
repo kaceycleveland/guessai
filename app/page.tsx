@@ -1,5 +1,6 @@
 import { createServerComponentSupabaseClient } from '@supabase/auth-helpers-nextjs';
 import { cookies, headers } from 'next/headers';
+import Image from 'next/image';
 
 import { GAME_COOKIE } from '@/lib/api/cookie-game';
 import { Database } from '@/lib/database.types';
@@ -10,6 +11,7 @@ import { CluesArray, OrderedClues } from '@/types/ordered-clues';
 
 import Clues from './clues';
 import GuessBox from './guess-box';
+import { RobotImage } from './robot-image';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -143,9 +145,10 @@ export default async function Page() {
   const isGuessBlocked = recentClue.guesses?.length === recentClue.clue.max_attempts;
 
   return (
-    <div className="flex w-full max-w-4xl flex-col gap-4">
+    <div className="relative flex w-full max-w-4xl flex-col gap-4">
+      <RobotImage hasContent={Boolean(clues.length > 1 || (clues?.[0].guesses && clues?.[0].guesses.length > 0))} />
       {/* @ts-ignore */}
-      <Clues clues={clues} total={totalCluesAvailable} />
+      {totalCluesAvailable && <Clues clues={clues} total={totalCluesAvailable} />}
       <GuessBox
         isClueBlocked={isClueBlocked}
         isGuessBlocked={isGuessBlocked}
