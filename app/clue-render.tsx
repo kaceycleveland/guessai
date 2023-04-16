@@ -28,7 +28,6 @@ interface ClueRenderProps {
 }
 
 export default function ClueRender({ body, total }: ClueRenderProps) {
-  console.log(body, total);
   return (
     <motion.div
       variants={variants}

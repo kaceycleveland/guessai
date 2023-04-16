@@ -31,7 +31,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           {...rest}
         />
         {endContent && (
-          <div className="pointer-events-none absolute inset-0 flex items-center justify-end pr-2 font-semibold text-slate-600">
+          <div className="pointer-events-none mt-2 flex items-center font-semibold text-slate-600 md:absolute md:inset-0 md:mt-0 md:justify-end md:pr-2">
             {endContent}
           </div>
         )}

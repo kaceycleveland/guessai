@@ -78,8 +78,6 @@ export default function GuessBox({ isClueBlocked, isGuessBlocked, isGameFinished
   const isDone = isClueBlocked && isGuessBlocked;
   const isLoading = isPending || isLoadingGuess || isLoadingClue;
 
-  console.log('isGameFinished', isGameFinished, word);
-
   let bodyContent = (
     <>
       <Button variant="secondary" onClick={handleGetClue} disabled={isLoading || isClueBlocked}>
@@ -127,7 +125,7 @@ export default function GuessBox({ isClueBlocked, isGuessBlocked, isGameFinished
   }
 
   return (
-    <div className="sticky bottom-4 flex flex-col gap-4 rounded bg-slate-950 bg-opacity-90 p-4 shadow-lg">
+    <div className="bg-opacity/90 sticky bottom-4 flex flex-col gap-4 rounded bg-slate-950 p-4 shadow-lg">
       {bodyContent}
     </div>
   );

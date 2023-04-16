@@ -182,6 +182,10 @@ export interface Database {
         Args: Record<PropertyKey, never>;
         Returns: number;
       };
+      get_time_until_tomorrow: {
+        Args: Record<PropertyKey, never>;
+        Returns: string;
+      };
     };
     Enums: {
       [_ in never]: never;

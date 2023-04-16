@@ -117,6 +117,7 @@ export async function POST(request: NextRequest) {
 
       return NextResponse.json({
         correct,
+        word,
         game_id: !userData.user?.id ? game.data.id : undefined,
       });
     }
