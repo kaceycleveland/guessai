@@ -89,19 +89,6 @@ export default function AuthedMenu() {
               )}
             </Menu.Item>
           </div>
-          <div className="px-1 py-1">
-            <Menu.Item>
-              {({ active }) => (
-                <button
-                  className={`${
-                    active ? "bg-violet-500" : ""
-                  } group flex w-full items-center rounded-md px-2 py-2 text-sm text-white`}
-                >
-                  Archive
-                </button>
-              )}
-            </Menu.Item>
-          </div>
         </Menu.Items>
       </Transition>
     </Menu>

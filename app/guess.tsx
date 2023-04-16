@@ -35,6 +35,7 @@ export const Guess = forwardRef<HTMLDivElement, GuessProps>(
         layout="size"
         initial="hidden"
         animate="visible"
+        exit="hidden"
         variants={variants}
       >
         <div className="px-4 py-2">{guess}</div>

@@ -2,6 +2,7 @@ export type CluesArray = {
   clue: string | null;
   sort_order: number;
   max_attempts: number;
+  word_id: number;
 }[];
 
 export type OrderedClues = {
@@ -15,5 +16,6 @@ export type OrderedClues = {
     clue: string | null;
     sort_order: number;
     max_attempts: number;
+    word_id: number;
   };
 }[];

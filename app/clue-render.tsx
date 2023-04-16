@@ -2,9 +2,10 @@
 
 import { Variants, motion } from "framer-motion";
 import Clue from "./clue";
-import { CluesArray, OrderedClues } from "@/types/ordered-clues";
+import { OrderedClues } from "@/types/ordered-clues";
 import Guess from "./guess";
 import AttemptCount from "./attempt-count";
+import { Fragment } from "react";
 
 const variants: Variants = {
   visible: {
@@ -21,9 +22,10 @@ const variants: Variants = {
 
 interface ClueRenderProps {
   body?: OrderedClues;
+  total: number;
 }
 
-export default function ClueRender({ body }: ClueRenderProps) {
+export default function ClueRender({ body, total }: ClueRenderProps) {
   console.log(body);
   return (
     <motion.div
@@ -31,14 +33,18 @@ export default function ClueRender({ body }: ClueRenderProps) {
       initial="hidden"
       animate="visible"
       className="flex flex-col gap-4"
-      layout
+      layout="size"
     >
       {body?.map((entry, index) => {
         return (
-          <>
-            <Clue key={index} clueText={entry.clue.clue ?? ""} />
+          <Fragment key={index}>
+            <Clue
+              clueText={entry.clue.clue ?? ""}
+              order={entry.clue.sort_order}
+              total={total}
+            />
             {entry.guesses?.length ? (
-              <motion.div className="flex gap-2 flex-wrap">
+              <motion.div layout="size" className="flex gap-2 flex-wrap">
                 {entry.guesses.map(({ guess, correct }, key) => (
                   <Guess key={key} correct={correct} guess={guess} />
                 ))}
@@ -48,7 +54,7 @@ export default function ClueRender({ body }: ClueRenderProps) {
                 />
               </motion.div>
             ) : undefined}
-          </>
+          </Fragment>
         );
       })}
     </motion.div>

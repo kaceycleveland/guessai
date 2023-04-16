@@ -11,7 +11,15 @@ import { Input } from "@/components/input";
 import { Button } from "@/components/button";
 import { postGameClue, postGameClueKey } from "@/lib/api/post-game-clue";
 
-export default function GuessBox() {
+interface GuessBoxProps {
+  isClueBlocked?: boolean;
+  isGuessBlocked?: boolean;
+}
+
+export default function GuessBox({
+  isClueBlocked,
+  isGuessBlocked,
+}: GuessBoxProps) {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
@@ -54,24 +62,42 @@ export default function GuessBox() {
     [handleSubmit, postGuess]
   );
 
+  const isDone = isClueBlocked && isGuessBlocked;
   const isLoading = isPending || isLoadingGuess || isLoadingClue;
 
   return (
     <div className="sticky bottom-4 p-4 bg-slate-950 rounded bg-opacity-90 shadow-lg flex flex-col gap-4">
-      <Button variant="secondary" onClick={handleGetClue} disabled={isLoading}>
-        Give me a clue
-      </Button>
-      <form className="flex gap-4" onSubmit={handleGuess}>
-        <Input
-          id="word"
-          type="text"
-          placeholder="Guess a word"
-          {...register("word")}
-        />
-        <Button type="submit" className="p-2 basis-1/4" disabled={isLoading}>
-          Guess
-        </Button>
-      </form>
+      {!isDone ? (
+        <>
+          <Button
+            variant="secondary"
+            onClick={handleGetClue}
+            disabled={isLoading || isClueBlocked}
+          >
+            Give me a clue
+          </Button>
+          <form className="flex gap-4" onSubmit={handleGuess}>
+            <Input
+              id="word"
+              type="text"
+              placeholder="Guess a word"
+              {...register("word")}
+            />
+            <Button
+              type="submit"
+              className="p-2 basis-1/4"
+              disabled={isLoading || isGuessBlocked}
+            >
+              Guess
+            </Button>
+          </form>
+        </>
+      ) : (
+        <div className="text-white flex items-center font-bold text-center w-full">
+          {`You are out of guesses and clues! Check in tomorrow to try again and
+          see what today's answer was.`}
+        </div>
+      )}
     </div>
   );
 }

@@ -8,7 +8,7 @@ const variants: Variants = {
   hidden: { opacity: 0 },
 };
 
-const circleCommonClasses = "h-2.5 w-2.5 bg-current   rounded-full";
+const circleCommonClasses = "h-2.5 w-2.5 bg-current rounded-full";
 
 export interface LoadingProps {
   className?: string;

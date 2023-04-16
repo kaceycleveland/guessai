@@ -18,22 +18,27 @@ const variants = {
 
 export interface ClueProps {
   clueText: string;
+  order: number;
+  total: number;
 }
 
 export const Clue = forwardRef<HTMLDivElement, ClueProps>(
-  ({ clueText }, ref) => {
+  ({ clueText, order, total }, ref) => {
     return (
       <motion.div
         ref={ref}
         className={
-          " bg-slate-950 bg-opacity-40 border border-slate-900 backdrop-blur-lg rounded text-white shadow-md w-full"
+          " bg-slate-950 bg-opacity-40 border border-slate-900 backdrop-blur-lg rounded text-white shadow-md w-full flex"
         }
         layout="size"
         initial="hidden"
         animate="visible"
         variants={variants}
       >
-        <div className="p-4">{clueText}</div>
+        <div className="p-4 flex-1">{clueText}</div>
+        <div className="p-4">
+          {order + 1}/{total}
+        </div>
       </motion.div>
     );
   }

@@ -12,11 +12,13 @@ const variants = {
 interface LoadingBackdropProps {
   show?: boolean;
   className?: string;
+  isFullScreen?: boolean;
   loadingProps?: LoadingProps;
 }
 export const LoadingBackdrop = ({
   show,
   className,
+  isFullScreen,
   loadingProps,
 }: LoadingBackdropProps) => {
   return (
@@ -25,8 +27,12 @@ export const LoadingBackdrop = ({
       variants={variants}
       animate={show ? "visible" : "hidden"}
       className={clsx(
-        "absolute w-full h-full flex items-center justify-center bg-slate-950 bg-opacity-80",
+        "flex items-center justify-center bg-slate-950 bg-opacity-80",
         { "pointer-events-none": !show },
+        {
+          "fixed top-0 left-0 overflow-hidden w-full h-screen": isFullScreen,
+          "absolute w-full h-full": !isFullScreen,
+        },
         className
       )}
     >
