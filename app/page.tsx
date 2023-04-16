@@ -79,6 +79,8 @@ export default async function Page() {
   }
 
   let givenClues;
+  let isGameFinished = false;
+  let correctWord;
   let clues: OrderedClues = firstClues.map((clue) => ({ clue }));
 
   if (!setNewGameToNewWord) {
@@ -112,6 +114,9 @@ export default async function Page() {
     // Type narrow the given clues and guesses
     if (givenClues?.data?.length) {
       const narrowedGuesses = narrowItems(givenClues.data[0].guesses);
+      const foundCorrectGuess = narrowedGuesses.find((guessBody) => guessBody.correct);
+      isGameFinished = Boolean(foundCorrectGuess?.correct);
+      correctWord = foundCorrectGuess?.guess;
       const narrowedClues = narrowItems(givenClues.data[0].given_clues)
         .map((items) => ({
           given_clue_id: items.id,
@@ -141,7 +146,12 @@ export default async function Page() {
     <div className="flex flex-col gap-4 w-full max-w-4xl">
       {/* @ts-ignore */}
       <Clues clues={clues} total={totalCluesAvailable} />
-      <GuessBox isClueBlocked={isClueBlocked} isGuessBlocked={isGuessBlocked} />
+      <GuessBox
+        isClueBlocked={isClueBlocked}
+        isGuessBlocked={isGuessBlocked}
+        isGameFinished={isGameFinished}
+        word={correctWord}
+      />
     </div>
   );
 }

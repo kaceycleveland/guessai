@@ -34,7 +34,7 @@ export default function SignupModal({ isOpen, closeModal, openModal }: BasicModa
 
   return (
     <>
-      <LoadingBackdrop isFullScreen show={isPending} loadingProps={{ className: 'bg-cyan-500' }} />
+      <LoadingBackdrop show={isPending} loadingProps={{ className: 'bg-cyan-500' }} />
       <Modal isOpen={isOpen} closeModal={closeModal} title="Sign up to Save Progress">
         <form onSubmit={submitSignup}>
           <div className="mt-2 flex flex-col gap-2">

@@ -16,9 +16,11 @@ import { GuessWord } from '@/types/guess-word';
 interface GuessBoxProps {
   isClueBlocked?: boolean;
   isGuessBlocked?: boolean;
+  isGameFinished?: boolean;
+  word?: string;
 }
 
-export default function GuessBox({ isClueBlocked, isGuessBlocked }: GuessBoxProps) {
+export default function GuessBox({ isClueBlocked, isGuessBlocked, isGameFinished, word }: GuessBoxProps) {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
@@ -38,7 +40,7 @@ export default function GuessBox({ isClueBlocked, isGuessBlocked }: GuessBoxProp
   }, [getClue]);
 
   const { trigger: postGuess, isMutating: isLoadingGuess } = useSWRMutation(postGameGuessKey, postGameGuess);
-  const { register, handleSubmit } = useForm<GuessWord>();
+  const { register, formState, handleSubmit, reset } = useForm<GuessWord>();
 
   const handleGuess = useCallback(
     handleSubmit(async (guessBody) => {
@@ -56,6 +58,8 @@ export default function GuessBox({ isClueBlocked, isGuessBlocked }: GuessBoxProp
           : toast(`'${word}' was incorrect`, { type: 'info', autoClose: 1000 });
       }
 
+      reset(guessBody);
+
       startTransition(() => {
         router.refresh();
       });
@@ -66,26 +70,55 @@ export default function GuessBox({ isClueBlocked, isGuessBlocked }: GuessBoxProp
   const isDone = isClueBlocked && isGuessBlocked;
   const isLoading = isPending || isLoadingGuess || isLoadingClue;
 
+  console.log('isGameFinished', isGameFinished, word);
+
+  let bodyContent = (
+    <>
+      <Button variant="secondary" onClick={handleGetClue} disabled={isLoading || isClueBlocked}>
+        Give me a clue
+      </Button>
+      <form className="flex gap-4" onSubmit={handleGuess}>
+        <Input
+          id="word"
+          type="text"
+          placeholder="Guess a word"
+          {...register('word', { maxLength: 12, minLength: 2, required: true })}
+        />
+        <Button
+          type="submit"
+          className="p-2 basis-1/4"
+          disabled={isLoading || isGuessBlocked || !formState.isValid || !formState.isDirty}
+        >
+          Guess
+        </Button>
+      </form>
+    </>
+  );
+
+  if (isDone) {
+    bodyContent = (
+      <div className="text-white flex items-center font-bold text-center w-full">
+        {`You are out of guesses and clues! Check in tomorrow to try again and
+    see what today's word was.`}
+      </div>
+    );
+  }
+
+  if (isGameFinished) {
+    bodyContent = (
+      <div className="text-white font-bold text-center w-full">
+        <div>
+          <span>You guessed it! The word was </span>
+          <span className="text-cyan-500">{word}</span>.
+        </div>
+        <div>Check back tomorrow for a new word!</div>
+      </div>
+    );
+  }
+
   return (
     <div className="sticky bottom-4 p-4 bg-slate-950 rounded bg-opacity-90 shadow-lg flex flex-col gap-4">
-      {!isDone ? (
-        <>
-          <Button variant="secondary" onClick={handleGetClue} disabled={isLoading || isClueBlocked}>
-            Give me a clue
-          </Button>
-          <form className="flex gap-4" onSubmit={handleGuess}>
-            <Input id="word" type="text" placeholder="Guess a word" {...register('word')} />
-            <Button type="submit" className="p-2 basis-1/4" disabled={isLoading || isGuessBlocked}>
-              Guess
-            </Button>
-          </form>
-        </>
-      ) : (
-        <div className="text-white flex items-center font-bold text-center w-full">
-          {`You are out of guesses and clues! Check in tomorrow to try again and
-          see what today's answer was.`}
-        </div>
-      )}
+      {bodyContent}
     </div>
   );
 }
