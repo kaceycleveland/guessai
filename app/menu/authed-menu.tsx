@@ -1,16 +1,42 @@
 "use client";
 
 import { Menu, Transition } from "@headlessui/react";
-import { Fragment, useCallback, useEffect, useRef, useState } from "react";
+import {
+  Fragment,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { useSupabase } from "../supabase-provider";
+import { hasPermission } from "@/lib/permissions/has-permission";
+import { useRouter } from "next/navigation";
+import { GAME_COOKIE } from "@/lib/api/cookie-game";
 
 export default function AuthedMenu() {
+  const router = useRouter();
   const { supabase } = useSupabase();
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    hasPermission(supabase, ["ADMIN"]).then((permissions) => {
+      setIsAdmin(Boolean(permissions.length ? permissions[0] : undefined));
+    });
+  }, [supabase]);
+
+  const navigateAdmin = useCallback(() => {
+    router.push("/admin");
+  }, [router]);
 
   const handleLogout = useCallback(async () => {
-    await supabase.auth.signOut();
-  }, [supabase]);
+    await supabase.auth.signOut().then(() => {
+      document.cookie = `${GAME_COOKIE}=;`;
+      router.refresh();
+    });
+  }, [supabase, router]);
+
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
@@ -32,6 +58,23 @@ export default function AuthedMenu() {
         leaveTo="transform opacity-0 scale-95"
       >
         <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded bg-slate-950 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+          {isAdmin && (
+            <div className="px-1 py-1 ">
+              <Menu.Item>
+                {({ active }) => (
+                  <button
+                    className={`${
+                      active ? "bg-violet-500" : ""
+                    } group flex w-full items-center rounded-md px-2 py-2 text-sm text-white`}
+                    onClick={navigateAdmin}
+                  >
+                    Admin
+                  </button>
+                )}
+              </Menu.Item>
+            </div>
+          )}
+
           <div className="px-1 py-1 ">
             <Menu.Item>
               {({ active }) => (

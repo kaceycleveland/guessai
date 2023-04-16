@@ -1,32 +1,44 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { forwardRef } from "react";
 
 const variants = {
-  visible: { scale: 1.0, y: "0%", opacity: 1 },
-  hidden: { scale: 1.0, y: "200%", opacity: 0 },
+  visible: {
+    y: "0%",
+    opacity: 1,
+    height: "auto",
+  },
+  hidden: {
+    y: "200%",
+    opacity: 0,
+    height: 0,
+  },
 };
 
 export interface ClueProps {
-  initial?: keyof typeof variants;
-  state: keyof typeof variants;
   clueText: string;
 }
 
-export const Clue = ({ initial, state, clueText }: ClueProps) => {
-  return (
-    <motion.div
-      className={
-        `${state}-clue-state` +
-        " p-4 bg-slate-950 bg-opacity-40 border border-slate-900 backdrop-blur-lg rounded text-white shadow-md w-full"
-      }
-      initial={initial ?? "hidden"}
-      variants={variants}
-      animate={state}
-    >
-      {clueText}
-    </motion.div>
-  );
-};
+export const Clue = forwardRef<HTMLDivElement, ClueProps>(
+  ({ clueText }, ref) => {
+    return (
+      <motion.div
+        ref={ref}
+        className={
+          " bg-slate-950 bg-opacity-40 border border-slate-900 backdrop-blur-lg rounded text-white shadow-md w-full"
+        }
+        layout="size"
+        initial="hidden"
+        animate="visible"
+        variants={variants}
+      >
+        <div className="p-4">{clueText}</div>
+      </motion.div>
+    );
+  }
+);
+
+Clue.displayName = "Clue";
 
 export default Clue;

@@ -1,3 +1,15 @@
+import { CreateChatCompletionRequest } from "openai";
+
+export const DEFAULT_REQUEST_SETTINGS: Omit<
+  CreateChatCompletionRequest,
+  "messages"
+> = {
+  model: "gpt-3.5-turbo",
+  presence_penalty: 1,
+  frequency_penalty: 0.5,
+  max_tokens: 500,
+};
+
 export const GET_WORD_PROMPT = `
 Give me a word that is a noun.
 The word must be between 4 and 10 letters.
@@ -6,14 +18,20 @@ The word must have a unique origin.
 `;
 
 export const GET_CLUES_PROMPT = `
-Generate 10 clues for someone guessing that word.
+Generate 15 clues for someone guessing that word.
 Each clue must focus specifically on the origin of the word.
-Do not give clues describing the meaning of the word.
 Order the clues in order of difficulty.
 Do not number the clues and separate each clue by a new line.
-Do not use the word in any of the clues.
-Do not use any words similar to the word in any of the clues.
-Have each clue be a max of 1 sentence long.
+Write the clues out with the given requirements below:
+`;
+
+export const CLEAN_CLUES_PROMPT = `
+Order the clues in order of guessing difficulty.
+Remove any numbering or bullet points prepended to the clues.
+Only give the clues by themselves.
+Remove any clues that include any words similar to the word.
+Have each clue be a max of two sentences long.
+Write the clues out with the given requirements below:
 `;
 
 export const GET_CLUE_DETAILS_PROMPT = `

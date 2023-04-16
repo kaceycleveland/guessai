@@ -21,7 +21,7 @@ export const Button = ({
     <button
       className={clsx(
         className,
-        "rounded p-2 font-semibold text-white focus:outline focus:outline-1 transition-colors",
+        "rounded p-2 font-semibold text-white focus:outline focus:outline-1 transition-colors disabled:pointer-events-none disabled:opacity-60",
         {
           [primaryClassNames]: variant === "primary",
           [secondaryClassNames]: variant === "secondary",

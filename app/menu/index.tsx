@@ -11,8 +11,6 @@ export default async function Menu() {
 
   const { data } = await supabase.auth.getSession();
 
-  console.log(data);
-
   if (data.session) return <AuthedMenu />;
 
   return <UnauthedMenu />;

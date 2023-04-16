@@ -1,3 +1,4 @@
+import Link from "next/link";
 import "./globals.css";
 import Menu from "./menu";
 import SupabaseProvider from "./supabase-provider";
@@ -19,15 +20,20 @@ export default function RootLayout({
           <main className="min-h-full bg-gradient-to-bl from-indigo-950 to-slate-800 flex flex-col">
             <div className="sticky top-0 z-10 w-full p-4 bg-slate-900 bg-opacity-50 backdrop-blur-lg">
               <div className="max-w-4xl w-full px-2 m-auto flex justify-between items-center">
-                <h1 className="text-4xl font-bold bg-gradient-to-r from-cyan-400 to-violet-400 inline-block text-transparent bg-clip-text">
-                  GuessAI
-                </h1>
+                <Link href="/">
+                  <h1 className="text-4xl font-bold bg-gradient-to-r from-cyan-400 to-violet-400 inline-block text-transparent bg-clip-text">
+                    GuessAI
+                  </h1>
+                </Link>
                 <div className="">
+                  {/* @ts-ignore */}
                   <Menu />
                 </div>
               </div>
             </div>
-            {children}
+            <div className="flex-1 flex flex-col justify-center items-center w-full p-4">
+              {children}
+            </div>
           </main>
         </SupabaseProvider>
       </body>
