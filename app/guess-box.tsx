@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useCallback, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
 import useSWRMutation from 'swr/mutation';
 
 import { Button } from '@/components/button';
@@ -46,6 +47,15 @@ export default function GuessBox({ isClueBlocked, isGuessBlocked }: GuessBoxProp
         console.log('SETTING COOKIE to', body.data.game_id);
         document.cookie = `${GAME_COOKIE}=${body.data.game_id}`;
       }
+      const correct = body?.data.correct;
+
+      if (correct !== undefined) {
+        const word = body?.data.word;
+        correct
+          ? toast(`'${word}' was correct!`, { type: 'success' })
+          : toast(`'${word}' was incorrect`, { type: 'info', autoClose: 1000 });
+      }
+
       startTransition(() => {
         router.refresh();
       });

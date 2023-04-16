@@ -1,0 +1,47 @@
+:root {
+    --toastify-color-light: theme('colors.white');
+    --toastify-color-dark: theme('colors.slate.950');
+    --toastify-color-info: theme('colors.cyan.700');
+    --toastify-color-success: theme('colors.green.700');
+    --toastify-color-warning: theme('colors.yellow.700');
+    --toastify-color-error: theme('colors.red.700');
+    --toastify-color-transparent: rgba(255, 255, 255, 0.7);
+  
+    --toastify-icon-color-info: var(--toastify-color-info);
+    --toastify-icon-color-success: var(--toastify-color-success);
+    --toastify-icon-color-warning: var(--toastify-color-warning);
+    --toastify-icon-color-error: var(--toastify-color-error);
+  
+    --toastify-toast-width: 320px;
+    --toastify-toast-background: theme('colors.slate.800');
+    --toastify-toast-min-height: 48px;
+    --toastify-toast-max-height: 800px;
+    --toastify-font-family: sans-serif;
+    --toastify-z-index: 9999;
+  
+    --toastify-text-color-light: theme('colors.slate.950');;
+    --toastify-text-color-dark: theme('colors.white');
+  
+    --toastify-text-color-info: theme('colors.white');
+    --toastify-text-color-success: theme('colors.white');
+    --toastify-text-color-warning: theme('colors.white');
+    --toastify-text-color-error: theme('colors.white');
+  
+    --toastify-spinner-color: theme('colors.cyan.500');
+
+    --toastify-color-progress-light: linear-gradient(
+      to right,
+      theme('colors.cyan.600'),
+      theme('colors.violet.600'),
+    );
+
+    --toastify-color-progress-dark: theme('colors.violet.600');
+    --toastify-color-progress-info: var(--toastify-color-info);
+    --toastify-color-progress-success: var(--toastify-color-success);
+    --toastify-color-progress-warning: var(--toastify-color-warning);
+    --toastify-color-progress-error: var(--toastify-color-error);
+  }
+
+  .Toastify__toast-container {
+    top: theme('height.20');
+}

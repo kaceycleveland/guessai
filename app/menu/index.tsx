@@ -22,7 +22,7 @@ export default async function Menu() {
   const { data: userData } = await supabase.auth.getUser();
 
   return (
-    <div className="sticky top-0 z-10 w-full p-4 bg-slate-900 bg-opacity-50 backdrop-blur-lg">
+    <div className="sticky top-0 z-10 w-full p-4 bg-slate-900 bg-opacity-50 backdrop-blur-lg h-20 flex items-center">
       <div className="max-w-4xl w-full px-2 m-auto flex justify-between items-center">
         <Link href="/">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-cyan-400 to-violet-400 inline-block text-transparent bg-clip-text">

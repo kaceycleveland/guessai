@@ -4,6 +4,7 @@ import { GuessWord } from '@/types/guess-word';
 
 interface PostGameGuessResponse {
   correct: boolean;
+  word?: string;
   game_id?: string;
 }
 

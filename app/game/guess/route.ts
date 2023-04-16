@@ -14,7 +14,9 @@ export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 export async function POST(request: NextRequest) {
-  const { word }: GuessWord = await request.json();
+  const { word: origWord }: GuessWord = await request.json();
+
+  const word = origWord?.toLowerCase();
 
   const supabase = createRouteHandlerSupabaseClient<Database>({
     headers,
@@ -140,7 +142,7 @@ export async function POST(request: NextRequest) {
     const givenClueId = givenClue.id;
 
     if (givenClue.guesses.length >= givenClue.clue.max_attempts) {
-      return NextResponse.json({ correct: false, message: 'Max attempts hit for clue' }, { status: 500 });
+      return NextResponse.json({ correct: false, word, message: 'Max attempts hit for clue' }, { status: 500 });
     }
 
     console.log(
@@ -154,7 +156,7 @@ export async function POST(request: NextRequest) {
       game_id: gameId,
     });
 
-    return NextResponse.json({ correct });
+    return NextResponse.json({ correct, word });
   }
 
   return NextResponse.json({ message: 'There was an error guessing' }, { status: 500 });
