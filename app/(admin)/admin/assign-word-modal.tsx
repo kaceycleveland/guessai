@@ -8,6 +8,7 @@ import useSWR, { mutate } from 'swr';
 import useSWRMutation from 'swr/mutation';
 
 import { Button } from '@/components/button';
+import { Loading } from '@/components/loading';
 import { LoadingBackdrop } from '@/components/loading-backdrop';
 import Modal from '@/components/modal';
 import { BasicModalProps } from '@/components/modal-hooks';
@@ -23,8 +24,7 @@ interface AssignWordModalProps extends BasicModalProps {
 export default function AssignWordModal({ date, isOpen, closeModal, openModal }: AssignWordModalProps) {
   const [activeWordId, setActiveWordId] = useState<number>();
   const router = useRouter();
-  const { data, isValidating } = useSWR(getWordsKey, getWords);
-  console.log('words data', data);
+  const { data, isValidating, isLoading: isLoadingWords } = useSWR(getWordsKey, getWords);
 
   const { isMutating, trigger: assignWordToDate } = useSWRMutation(putWordAssignmentKey, putWordAssignment, {
     onSuccess: () => {
@@ -52,7 +52,7 @@ export default function AssignWordModal({ date, isOpen, closeModal, openModal }:
   return (
     <Modal isOpen={isOpen && Boolean(date)} closeModal={closeModal} title={`Set word for ${format(date, 'PPP')}`}>
       <div className="relative">
-        <LoadingBackdrop show={isLoading} loadingProps={{ className: 'bg-cyan-300' }} />
+        <LoadingBackdrop show={isLoadingWords} loadingProps={{ className: 'bg-cyan-300' }} />
         <div className="my-2">
           {data?.data.words.map((word, idx) => {
             return (
@@ -69,7 +69,8 @@ export default function AssignWordModal({ date, isOpen, closeModal, openModal }:
             );
           })}
         </div>
-        <div className="flex gap-4 justify-end">
+        <div className="flex gap-4 justify-end items-center">
+          {isValidating && <Loading className="bg-cyan-500" />}
           <Button variant="secondary" onClick={handleAssignment} disabled={isLoading || !activeWordId}>
             Assign
           </Button>
