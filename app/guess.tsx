@@ -37,6 +37,9 @@ export const Guess = forwardRef<HTMLDivElement, GuessProps>(({ correct, guess },
       animate="visible"
       exit="hidden"
       variants={variants}
+      onAnimationComplete={() => {
+        window.scrollTo({ behavior: 'smooth', top: document.body.scrollHeight });
+      }}
     >
       <div className="px-4 py-2">{guess}</div>
     </motion.div>

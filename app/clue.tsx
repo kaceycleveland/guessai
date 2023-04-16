@@ -33,6 +33,9 @@ export const Clue = forwardRef<HTMLDivElement, ClueProps>(({ clueText, order, to
       initial="hidden"
       animate="visible"
       variants={variants}
+      onAnimationComplete={() => {
+        window.scrollTo({ behavior: 'smooth', top: document.body.scrollHeight });
+      }}
     >
       <div className="p-4 flex-1">{clueText}</div>
       <div className="p-4">

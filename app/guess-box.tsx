@@ -24,6 +24,7 @@ const guessRequirements = {
   maxLength: { value: 12, message: 'Your guess must be less than or equal to 13 characters.' },
   minLength: { value: 2, message: 'Your guess must be more than or equal to 3 characters.' },
   required: { value: true, message: 'Enter in a guess!' },
+  pattern: { value: /^\S+$/, message: 'Words do not contain whitespace.' },
 };
 export default function GuessBox({ isClueBlocked, isGuessBlocked, isGameFinished, word }: GuessBoxProps) {
   const [isPending, startTransition] = useTransition();
@@ -62,7 +63,7 @@ export default function GuessBox({ isClueBlocked, isGuessBlocked, isGameFinished
         const word = body?.data.word;
         correct
           ? toast(`'${word}' was correct!`, { type: 'success' })
-          : toast(`'${word}' was incorrect`, { type: 'info', autoClose: 1000 });
+          : toast(`'${word}' was incorrect.`, { type: 'info', autoClose: 1500 });
       }
 
       reset(guessBody);

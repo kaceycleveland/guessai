@@ -30,7 +30,16 @@ interface ClueRenderProps {
 export default function ClueRender({ body, total }: ClueRenderProps) {
   console.log(body, total);
   return (
-    <motion.div variants={variants} initial="hidden" animate="visible" className="flex flex-col gap-4" layout="size">
+    <motion.div
+      variants={variants}
+      initial="hidden"
+      animate="visible"
+      className="flex flex-col gap-4"
+      layout="size"
+      onAnimationComplete={() => {
+        window.scrollTo({ behavior: 'smooth', top: document.body.scrollHeight });
+      }}
+    >
       {body?.map((entry, index) => {
         return (
           <Fragment key={index}>
