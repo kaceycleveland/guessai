@@ -13,21 +13,30 @@ export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
   const { word }: GuessWord = await request.json();
-  const { data: currentDate } = await getCurrentDate();
 
   const supabase = createRouteHandlerSupabaseClient<Database>({
     headers,
     cookies,
   });
 
-  const { data: userData } = await supabase.auth.getUser();
+  const initData = await Promise.all([
+    SupabaseAdminClient.rpc("get_current_word"),
+    getCurrentDate(),
+    supabase.auth.getUser(),
+  ]);
+  const { data: currentWordId } = initData[0];
+  const { data: currentDate } = initData[1];
+  const { data: userData } = initData[2];
+
+  const userId = userData.user?.id;
   const foundCookie = request.cookies.get(GAME_COOKIE)?.value;
   const gameCookie = foundCookie ? foundCookie : undefined;
 
   console.log("GUESSING COOKIE", gameCookie);
 
-  const gameQuery = SupabaseAdminClient.from("game").select(
-    `
+  const gameQuery = SupabaseAdminClient.from("game")
+    .select(
+      `
   id,
   words (
     word
@@ -44,23 +53,21 @@ export async function POST(request: NextRequest) {
     )
   )
   `
-  );
+    )
+    .eq("word_id", currentWordId)
+    .eq("date", currentDate);
 
   let getCurrentGameDetails;
   // Authed flow, ignore cookie
-  if (userData.user?.id) {
-    getCurrentGameDetails = await gameQuery
-      .eq("user_id", userData.user.id)
-      .eq("date", currentDate);
+  if (userId) {
+    getCurrentGameDetails = await gameQuery.eq("user_id", userId);
   }
 
   // Anon flow, use cookie
   if (gameCookie && !userData.user?.id) {
-    console.log("guessing with anon flow with game " + gameCookie);
     getCurrentGameDetails = await gameQuery
       .is("user_id", null)
-      .eq("id", gameCookie)
-      .eq("date", currentDate);
+      .eq("id", gameCookie);
   }
 
   if (getCurrentGameDetails?.error)
@@ -69,21 +76,25 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
 
-  console.log("getCurrentGameDetails", getCurrentGameDetails);
   // Handle creating a new game on first guess
   if (!getCurrentGameDetails?.data?.length && word) {
-    const firstClue = await SupabaseAdminClient.from("words")
+    const firstClueQuery = await SupabaseAdminClient.from("words")
       .select(`clues!inner(*),date_assignment!inner(*)`)
       .eq("date_assignment.date", currentDate)
       .or(`sort_order.eq.${0}`, { foreignTable: "clues" });
 
-    console.log("FIRST CLUE", firstClue);
-    if (firstClue.data?.length) {
-      const firstClueNarrowed = firstClue.data
+    if (firstClueQuery.error)
+      return NextResponse.json(
+        { message: firstClueQuery.error.message },
+        { status: 500 }
+      );
+
+    if (firstClueQuery.data.length) {
+      const firstClueNarrowed = firstClueQuery.data
         .map((val) => narrowItems(val.clues))
         .flat();
       const { game, clueInsertResult } = await createGame(
-        userData.user?.id,
+        userId,
         firstClueNarrowed
       );
 
@@ -136,7 +147,8 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  if (getCurrentGameDetails?.data?.length && word) {
+  // Existing game flow
+  if (getCurrentGameDetails?.data.length && word) {
     const gameDetails = getCurrentGameDetails.data[0];
     const gameId = gameDetails.id;
     const gameWord = narrowItems(gameDetails.words)[0].word;

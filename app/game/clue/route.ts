@@ -12,7 +12,7 @@ import { getCurrentDate } from "@/lib/utils/get-current-date";
 
 export const dynamic = "force-dynamic";
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   const supabase = createRouteHandlerSupabaseClient<Database>({
     headers,
     cookies,
@@ -54,6 +54,7 @@ export async function POST(request: NextRequest) {
   } else if (gameCookie) {
     gameAndClues = await cluesQuery.is("user_id", null).eq("id", gameCookie);
 
+    // Update the anonymous game to the found user
     if (gameAndClues.data?.length && gameAndClues.data[0].id && userId) {
       const gameUserUpdateQuery = await SupabaseAdminClient.from("game")
         .update({ user_id: userId })
