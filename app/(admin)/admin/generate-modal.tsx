@@ -51,8 +51,6 @@ export default function GenerateModal({ isOpen, closeModal, openModal }: BasicMo
     <Modal isOpen={isOpen} closeModal={closeModal} title="Generate new Words">
       <div className="relative">
         <LoadingBackdrop show={isLoading} loadingProps={{ className: 'bg-cyan-300' }} />
-
-        <LoadingBackdrop className="bg-cyan-300" />
         <div className="my-2">
           <div className="text-xl font-bold text-white p-2 rounded bg-slate-900 text-center my-2">
             {data?.data.word}

@@ -53,8 +53,6 @@ export default function AssignWordModal({ date, isOpen, closeModal, openModal }:
     <Modal isOpen={isOpen && Boolean(date)} closeModal={closeModal} title={`Set word for ${format(date, 'PPP')}`}>
       <div className="relative">
         <LoadingBackdrop show={isLoading} loadingProps={{ className: 'bg-cyan-300' }} />
-
-        <LoadingBackdrop className="bg-cyan-300" />
         <div className="my-2">
           {data?.data.words.map((word, idx) => {
             return (

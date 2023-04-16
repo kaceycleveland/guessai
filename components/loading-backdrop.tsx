@@ -23,8 +23,8 @@ export const LoadingBackdrop = ({ show, loadingProps, className }: LoadingBackdr
         leaveFrom="transform scale-100 opacity-100"
         leaveTo="transform scale-95 opacity-0"
       >
-        <div className="fixed inset-0 bg-slate-950 bg-opacity-80" aria-hidden="true" />
-        <div className="fixed inset-0 flex items-center justify-center p-4">
+        <div className="fixed inset-0 bg-slate-950 bg-opacity-80 z-50" aria-hidden="true" />
+        <div className="fixed inset-0 flex items-center justify-center p-4 z-50">
           <Loading {...loadingProps} />
         </div>
       </Transition>
