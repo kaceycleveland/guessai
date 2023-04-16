@@ -1,18 +1,11 @@
 "use client";
 
 import { Button } from "@/components/button";
-import { Input } from "@/components/input";
-import { useCallback, useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
-import { useSupabase } from "../supabase-provider";
-import { SignInWithPasswordCredentials } from "@supabase/supabase-js";
+import { useCallback, useMemo } from "react";
 import Modal from "@/components/modal";
 import useSWR, { SWRConfiguration } from "swr";
 import useSWRMutation from "swr/mutation";
-import axios from "axios";
 import { BasicModalProps } from "@/components/modal-hooks";
-import { GenerateWord } from "@/types/generate-word";
-import { Loading } from "@/components/loading";
 import { LoadingBackdrop } from "@/components/loading-backdrop";
 import { useRouter } from "next/navigation";
 import { getWordsFromAI, getWordsFromAIKey } from "@/lib/api/get-words-from-ai";
