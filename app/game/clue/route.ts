@@ -18,95 +18,89 @@ export async function POST(request: NextRequest) {
     cookies,
   });
 
-  const { data: currentDate } = await getCurrentDate();
-  const { data: userData, error: authError } = await supabase.auth.getUser();
+  const initData = await Promise.all([
+    SupabaseAdminClient.rpc("get_current_word"),
+    getCurrentDate(),
+    supabase.auth.getUser(),
+  ]);
+  const { data: currentWordId } = initData[0];
+  const { data: currentDate } = initData[1];
+  const { data: userData } = initData[2];
 
-  const foundCookie = request.cookies.get(GAME_COOKIE)?.value;
-  const gameCookie = foundCookie ? foundCookie : undefined;
-
+  const userId = userData.user?.id;
+  const gameCookie = cookies().get(GAME_COOKIE)?.value;
   console.log("FOUND COOKIE", gameCookie);
 
-  console.log(
-    `Requesting clue on ${currentDate} for user ${userData.user?.id}`
-  );
+  console.log(`Requesting clue on ${currentDate} for user ${userId}`);
 
-  let clues;
+  let gameAndClues;
   // Authed flow
-  if (userData.user?.id) {
-    console.log("ENTERED AUTH FLOW", userData.user);
-    clues = await SupabaseAdminClient.from("game")
-      .select(
-        `
-        id,
-        given_clues (
-          clues (
-            clue, sort_order
-          )
-        )
-        `
+  const cluesQuery = SupabaseAdminClient.from("game")
+    .select(
+      `
+    id,
+    given_clues (
+      clues (
+        clue, sort_order
       )
-      .eq("user_id", userData.user.id)
-      .eq("date", currentDate);
-  }
-
-  if (gameCookie) {
-    console.log("ENTERED GAME COOKIE FLOW");
-    clues = await SupabaseAdminClient.from("game")
-      .select(
-        `
-        id,
-        given_clues (
-            clues (
-                clue, sort_order
-            )
-        )
+    )
     `
-      )
-      .is("user_id", null)
-      .eq("id", gameCookie)
-      .eq("date", currentDate);
+    )
+    .eq("word_id", currentWordId)
+    .eq("date", currentDate);
+  if (userId) {
+    console.log("ENTERED AUTH FLOW", userData.user);
+    gameAndClues = await cluesQuery.eq("user_id", userId);
+  } else if (gameCookie) {
+    gameAndClues = await cluesQuery.is("user_id", null).eq("id", gameCookie);
 
-    if (clues.data?.length && clues.data[0].id) {
-      if (userData.user?.id) {
-        console.log("ATTEMPTING TO UPDATE GAME TO USER");
-        await SupabaseAdminClient.from("game")
-          .update({ user_id: userData.user.id })
-          .eq("id", clues.data[0]?.id);
-      }
+    if (gameAndClues.data?.length && gameAndClues.data[0].id && userId) {
+      const gameUserUpdateQuery = await SupabaseAdminClient.from("game")
+        .update({ user_id: userId })
+        .eq("id", gameAndClues.data[0].id);
+      if (gameUserUpdateQuery.error)
+        return NextResponse.json(
+          { message: gameUserUpdateQuery.error.message },
+          { status: 500 }
+        );
     }
   }
 
-  if (clues?.error)
-    return NextResponse.json({ message: clues.error.message }, { status: 500 });
+  if (gameAndClues?.error)
+    return NextResponse.json(
+      { message: gameAndClues.error.message },
+      { status: 500 }
+    );
 
-  console.log("CLUES", clues);
-
-  const narrowedCluesAndGame =
-    clues && clues.data.length
+  const narrowedGamesAndClues =
+    gameAndClues && gameAndClues.data.length
       ? {
-          id: clues.data[0].id,
-          clues: narrowItems(clues?.data[0].given_clues)
+          id: gameAndClues.data[0].id,
+          clues: narrowItems(gameAndClues.data[0].given_clues)
             .map((val) => narrowItems(val.clues))
             .flat(),
         }
       : undefined;
 
   const checkForNoGivenClues =
-    narrowedCluesAndGame?.clues && !narrowedCluesAndGame.clues.length; // Should never hit this as every game should have at least one clue
-  if (!narrowedCluesAndGame || checkForNoGivenClues) {
-    const firstAndSecondClue = await SupabaseAdminClient.from("words")
+    narrowedGamesAndClues?.clues && !narrowedGamesAndClues.clues.length;
+  if (!narrowedGamesAndClues || checkForNoGivenClues) {
+    // New game flow, add the first and second clue as the second one was requested
+    const firstAndSecondClueQuery = await SupabaseAdminClient.from("words")
       .select(`clues!inner(*),date_assignment!inner(*)`)
       .eq("date_assignment.date", currentDate)
       .or(`sort_order.eq.${0},sort_order.eq.${1}`, { foreignTable: "clues" });
 
-    console.log("GETTING FIRST AND SECOND CLUE", firstAndSecondClue);
+    if (firstAndSecondClueQuery.error)
+      return NextResponse.json(
+        { message: firstAndSecondClueQuery.error.message },
+        { status: 500 }
+      );
 
-    if (firstAndSecondClue.data?.length) {
-      const firstAndSecondClueNarrowed = firstAndSecondClue.data
+    if (firstAndSecondClueQuery.data.length) {
+      const firstAndSecondClueNarrowed = firstAndSecondClueQuery.data
         .map((val) => narrowItems(val.clues))
         .flat();
-
-      console.log("FIRST AND SECOND CLUE", firstAndSecondClueNarrowed);
 
       const { game, clueInsertResult } = await createGame(
         userData.user?.id,
@@ -135,9 +129,9 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  if (narrowedCluesAndGame) {
-    const foundGameId = narrowedCluesAndGame.id;
-    const givenClues = narrowedCluesAndGame.clues;
+  // If a game exists, then get the next clue.
+  if (narrowedGamesAndClues) {
+    const { id: foundGameId, clues: givenClues } = narrowedGamesAndClues;
     const lastClue = givenClues[givenClues.length - 1];
 
     console.log("LAST CLUE", lastClue);
@@ -170,30 +164,26 @@ export async function POST(request: NextRequest) {
       .flat()
       .map((data) => narrowItems(data.clues))
       .flat();
-    console.log(foundNextClue.data?.[0].words);
     console.log("FOUND NEXT CLUE", foundNextClue.data?.[0].id, nextClues);
 
-    if (foundNextClue.data) {
-      const narrowedClues = narrowItems(
-        foundNextClue.data.map((clueData) => narrowItems(clueData.words))
-      )
-        .flat()
-        .map((val) => narrowItems(val.clues))
-        .flat();
+    const narrowedClues = narrowItems(
+      foundNextClue.data.map((clueData) => narrowItems(clueData.words))
+    )
+      .flat()
+      .map((val) => narrowItems(val.clues))
+      .flat();
 
-      console.log("NARROWED CLUES", narrowedClues);
+    console.log("NARROWED CLUES", narrowedClues);
 
-      await SupabaseAdminClient.from("given_clues").upsert({
-        game_id: foundGameId,
-        clue_id: narrowedClues[0].id,
-      });
+    await SupabaseAdminClient.from("given_clues").upsert({
+      game_id: foundGameId,
+      clue_id: narrowedClues[0].id,
+    });
 
-      console.log(
-        `Giving user ${userData.user?.id} clue ${narrowedClues[0].id} (order ${narrowedClues[0].sort_order}) in game ${foundGameId}`
-      );
-      return NextResponse.json({ message: "success" }, { status: 200 });
-    }
-    // console.log("NARROWED CLUES", foundGameId, narrowedClues);
+    console.log(
+      `Giving user ${userId} clue ${narrowedClues[0].id} (order ${narrowedClues[0].sort_order}) in game ${foundGameId}`
+    );
+    return NextResponse.json({ message: "success" }, { status: 200 });
   }
 
   return NextResponse.json({ message: "Failed" }, { status: 500 });

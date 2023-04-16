@@ -16,35 +16,44 @@ export default async function Page() {
     headers,
     cookies,
   });
-  const { data: currentWordId } = await SupabaseAdminClient.rpc(
-    "get_current_word"
-  );
-  const { data: currentDate } = await getCurrentDate();
-  const { data: userData } = await supabase.auth.getUser();
+  const initData = await Promise.all([
+    SupabaseAdminClient.rpc("get_current_word"),
+    getCurrentDate(),
+    supabase.auth.getUser(),
+  ]);
+  const { data: currentWordId } = initData[0];
+  const { data: currentDate } = initData[1];
+  const { data: userData } = initData[2];
 
+  const userId = userData.user?.id;
   const gameCookie = cookies().get(GAME_COOKIE)?.value;
   let games;
+  const gameQuery = SupabaseAdminClient.from("game")
+    .select("*")
+    .eq("word_id", currentWordId)
+    .eq("date", currentDate);
   if (gameCookie) {
-    games = await SupabaseAdminClient.from("game")
-      .select("*")
-      .eq("date", currentDate)
-      .eq("id", gameCookie);
+    games = await gameQuery.eq("id", gameCookie);
+  } else if (userId) {
+    games = await gameQuery.eq("user_id", userId);
   }
 
   if (games?.error) {
     //TODO: Implement error page catch
   }
+  const foundGame = games?.data?.length ? games.data[0] : undefined;
 
   let setNewGameToNewWord = false;
-  if (games?.data?.[0].word_id !== currentWordId) {
+  if (foundGame && foundGame.word_id !== currentWordId) {
     setNewGameToNewWord = true;
   }
 
+  console.log("SET NEW GAME", foundGame?.word_id, currentWordId);
+
   let firstClues: CluesArray = [];
-  const isNewGameFromAuthedUser =
-    !userData.user?.id && games?.data?.length && games.data[0].user_id; // If there is no authed user and there is a user_id attached to the game
+  const isNewGameFromAuthedUser = foundGame && foundGame.user_id === userId; // If there is no authed user and there is a user_id attached to the game
   // If there is no anon game, render the first clue of today.
-  if (!games?.data?.length || isNewGameFromAuthedUser) {
+  if (!foundGame || isNewGameFromAuthedUser) {
     const firstClue = await SupabaseAdminClient.from("words")
       .select(`clues!inner(*),date_assignment!inner(*)`)
       .eq("date_assignment.date", currentDate)
@@ -58,8 +67,6 @@ export default async function Page() {
     // If there is a game, fetch the user's game and update the anon game if needed.
   }
 
-  const foundGame = games?.data?.length ? games.data[0] : undefined;
-
   // Update anon game to user ownership
   if (userData.user?.id && foundGame) {
     const updateGameToUser = await SupabaseAdminClient.from("game")
@@ -68,15 +75,16 @@ export default async function Page() {
       .is("user_id", null)
       .select();
     console.log("updateGameToUser", updateGameToUser);
-    if (updateGameToUser.error) throw new Error("User failed to update.");
+    if (updateGameToUser.error) throw new Error(updateGameToUser.error.message);
   }
 
   let givenClues;
   let clues: OrderedClues = firstClues.map((clue) => ({ clue }));
 
   if (!setNewGameToNewWord) {
-    const getGivenCluesQuery = SupabaseAdminClient.from("game").select(
-      `
+    const getGivenCluesQuery = SupabaseAdminClient.from("game")
+      .select(
+        `
   id,
   word_id,
   guesses (
@@ -91,11 +99,13 @@ export default async function Page() {
       )
   )
 `
-    );
+      )
+      .eq("word_id", currentWordId);
+    console.log(userId);
     // Get the given clues for the game
-    if (userData.user?.id) {
+    if (userId) {
       givenClues = await getGivenCluesQuery
-        .eq("user_id", userData.user.id)
+        .eq("user_id", userId)
         .eq("date", currentDate);
     } else if (foundGame) {
       givenClues = await getGivenCluesQuery

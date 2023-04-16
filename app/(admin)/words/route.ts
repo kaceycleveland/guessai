@@ -16,6 +16,9 @@ import { SupabaseAdminClient } from "@/lib/supabase-admin-client";
 
 export const dynamic = "force-dynamic";
 
+/**
+ * Get words list
+ */
 export async function GET() {
   const supabase = createRouteHandlerSupabaseClient<Database>({
     headers,
@@ -53,7 +56,10 @@ export async function GET() {
 }
 
 // TODO: Pull latest words from supabase and ensure the AI does not return it
-export async function POST(request: Request) {
+/**
+ * This function handles generating new words from OpenAI
+ */
+export async function POST() {
   const supabase = createRouteHandlerSupabaseClient<Database>({
     headers,
     cookies,

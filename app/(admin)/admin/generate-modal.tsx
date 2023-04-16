@@ -9,7 +9,7 @@ import { BasicModalProps } from "@/components/modal-hooks";
 import { LoadingBackdrop } from "@/components/loading-backdrop";
 import { useRouter } from "next/navigation";
 import { getWordsFromAI, getWordsFromAIKey } from "@/lib/api/get-words-from-ai";
-import { postAssignment } from "@/lib/api/post-words";
+import { postAddNewWord, postAddNewWordKey } from "@/lib/api/post-add-new-word";
 
 const wordsSWRConfig: SWRConfiguration = {
   revalidateIfStale: false,
@@ -38,8 +38,8 @@ export default function GenerateModal({
   console.log("words data", data);
 
   const { isMutating, trigger: assignWord } = useSWRMutation(
-    "/assignment",
-    postAssignment,
+    postAddNewWordKey,
+    postAddNewWord,
     { onSuccess: router.refresh }
   );
 
