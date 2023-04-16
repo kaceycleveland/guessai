@@ -1,20 +1,17 @@
-import { createRouteHandlerSupabaseClient } from "@supabase/auth-helpers-nextjs";
-import { NextResponse } from "next/server";
-import { cleanClues, cleanWord } from "./clean-data";
-import { headers, cookies } from "next/headers";
-import { client } from "@/lib/openai-client";
-import { ChatCompletionRequestMessageRoleEnum } from "openai";
-import {
-  CLEAN_CLUES_PROMPT,
-  DEFAULT_REQUEST_SETTINGS,
-  GET_CLUES_PROMPT,
-  GET_WORD_PROMPT,
-} from "./prompts";
-import { Database } from "@/lib/database.types";
-import { hasPermission } from "@/lib/permissions/has-permission";
-import { SupabaseAdminClient } from "@/lib/supabase-admin-client";
+import { createRouteHandlerSupabaseClient } from '@supabase/auth-helpers-nextjs';
+import { cookies, headers } from 'next/headers';
+import { NextResponse } from 'next/server';
+import { ChatCompletionRequestMessageRoleEnum } from 'openai';
 
-export const dynamic = "force-dynamic";
+import { Database } from '@/lib/database.types';
+import { client } from '@/lib/openai-client';
+import { hasPermission } from '@/lib/permissions/has-permission';
+import { SupabaseAdminClient } from '@/lib/supabase-admin-client';
+
+import { cleanClues, cleanWord } from './clean-data';
+import { CLEAN_CLUES_PROMPT, DEFAULT_REQUEST_SETTINGS, GET_CLUES_PROMPT, GET_WORD_PROMPT } from './prompts';
+
+export const dynamic = 'force-dynamic';
 
 /**
  * Get words list
@@ -24,18 +21,15 @@ export async function GET() {
     headers,
     cookies,
   });
-  const permissions = await hasPermission(supabase, ["ADMIN"]);
+  const permissions = await hasPermission(supabase, ['ADMIN']);
 
   if (!permissions[0]) {
-    return NextResponse.json(
-      { message: "Insufficent permissions" },
-      { status: 401 }
-    );
+    return NextResponse.json({ message: 'Insufficent permissions' }, { status: 401 });
   }
 
-  console.log("permissions", permissions);
+  console.log('permissions', permissions);
 
-  const getWords = await SupabaseAdminClient.from("words").select(`
+  const getWords = await SupabaseAdminClient.from('words').select(`
       id,
       word
   `);
@@ -45,10 +39,7 @@ export async function GET() {
   const words = getWords.data?.length ? getWords.data : undefined;
 
   if (getWords.error) {
-    return NextResponse.json(
-      { message: getWords.error.message },
-      { status: 500 }
-    );
+    return NextResponse.json({ message: getWords.error.message }, { status: 500 });
   }
   if (!words) return NextResponse.error();
 
@@ -64,7 +55,7 @@ export async function POST() {
     headers,
     cookies,
   });
-  const permissions = await hasPermission(supabase, ["ADMIN"]);
+  const permissions = await hasPermission(supabase, ['ADMIN']);
 
   if (!permissions[0]) {
     return NextResponse.error();
@@ -80,9 +71,7 @@ export async function POST() {
     ],
   });
 
-  const extractedWord = wordResponse.data.choices.length
-    ? wordResponse.data.choices[0].message?.content
-    : undefined;
+  const extractedWord = wordResponse.data.choices.length ? wordResponse.data.choices[0].message?.content : undefined;
 
   if (!extractedWord) return NextResponse.error();
 
@@ -108,9 +97,7 @@ export async function POST() {
     ],
   });
 
-  const extractedClues = cluesResponse.data.choices.length
-    ? cluesResponse.data.choices[0].message?.content
-    : undefined;
+  const extractedClues = cluesResponse.data.choices.length ? cluesResponse.data.choices[0].message?.content : undefined;
 
   if (!extractedClues) return NextResponse.error();
 
@@ -131,7 +118,7 @@ export async function POST() {
       },
       {
         role: ChatCompletionRequestMessageRoleEnum.Assistant,
-        content: cleanClues(word, extractedClues).join("\n"),
+        content: cleanClues(word, extractedClues).join('\n'),
       },
       {
         role: ChatCompletionRequestMessageRoleEnum.System,

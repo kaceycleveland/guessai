@@ -1,4 +1,4 @@
-import { SupabaseAdminClient } from "./supabase-admin-client";
+import { SupabaseAdminClient } from './supabase-admin-client';
 
 /**
  * Creates a new game with the given `userId` if specified.
@@ -6,7 +6,7 @@ import { SupabaseAdminClient } from "./supabase-admin-client";
  *
  */
 export const createGame = async (userId?: string, clues?: { id: number }[]) => {
-  const game = await SupabaseAdminClient.from("game")
+  const game = await SupabaseAdminClient.from('game')
     .insert({ user_id: userId })
     .select(
       `
@@ -18,7 +18,7 @@ export const createGame = async (userId?: string, clues?: { id: number }[]) => {
 
   let clueInsertResult;
   if (game.data && clues) {
-    clueInsertResult = await SupabaseAdminClient.from("given_clues")
+    clueInsertResult = await SupabaseAdminClient.from('given_clues')
       .upsert(
         clues.map((clue) => ({
           game_id: game.data.id,

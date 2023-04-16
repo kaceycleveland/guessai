@@ -1,11 +1,13 @@
-import { createServerComponentSupabaseClient } from "@supabase/auth-helpers-nextjs";
-import { headers, cookies } from "next/headers";
-import AuthedMenu from "./authed-menu";
-import UnauthedMenu from "./unauthed-menu";
-import Link from "next/link";
-import { getCurrentDate } from "@/lib/utils/get-current-date";
-import { addDays, format } from "date-fns";
-import { parseToDate } from "@/lib/utils/date-format";
+import { createServerComponentSupabaseClient } from '@supabase/auth-helpers-nextjs';
+import { addDays, format } from 'date-fns';
+import { cookies, headers } from 'next/headers';
+import Link from 'next/link';
+
+import { parseToDate } from '@/lib/utils/date-format';
+import { getCurrentDate } from '@/lib/utils/get-current-date';
+
+import AuthedMenu from './authed-menu';
+import UnauthedMenu from './unauthed-menu';
 
 export default async function Menu() {
   const supabase = createServerComponentSupabaseClient({
@@ -15,9 +17,7 @@ export default async function Menu() {
 
   const { data: currentDate } = await getCurrentDate();
 
-  const formattedDate = currentDate
-    ? format(parseToDate(currentDate), "PPP")
-    : undefined;
+  const formattedDate = currentDate ? format(parseToDate(currentDate), 'PPP') : undefined;
 
   const { data: userData } = await supabase.auth.getUser();
 

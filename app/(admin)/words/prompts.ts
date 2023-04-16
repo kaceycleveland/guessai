@@ -1,10 +1,7 @@
-import { CreateChatCompletionRequest } from "openai";
+import { CreateChatCompletionRequest } from 'openai';
 
-export const DEFAULT_REQUEST_SETTINGS: Omit<
-  CreateChatCompletionRequest,
-  "messages"
-> = {
-  model: "gpt-3.5-turbo",
+export const DEFAULT_REQUEST_SETTINGS: Omit<CreateChatCompletionRequest, 'messages'> = {
+  model: 'gpt-3.5-turbo',
   presence_penalty: 1,
   frequency_penalty: 0.5,
   max_tokens: 500,

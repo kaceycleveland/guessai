@@ -1,16 +1,14 @@
-"use client";
+'use client';
 
-import {
-  getWordAssignments,
-  getWordAssignmentsKey,
-} from "@/lib/api/get-word-assignments";
-import { addDays, format } from "date-fns";
-import { useMemo, useState } from "react";
+import { addDays, format } from 'date-fns';
+import { useMemo, useState } from 'react';
+import useSWR from 'swr';
 
-import useSWR from "swr";
-import AssignWordModal from "./assign-word-modal";
-import useModal from "@/components/modal-hooks";
-import { DATE_FORMAT, parseToDate } from "@/lib/utils/date-format";
+import useModal from '@/components/modal-hooks';
+import { getWordAssignments, getWordAssignmentsKey } from '@/lib/api/get-word-assignments';
+import { DATE_FORMAT, parseToDate } from '@/lib/utils/date-format';
+
+import AssignWordModal from './assign-word-modal';
 
 const getDates = (startDate: Date, days: number) => {
   return Array(days)
@@ -28,17 +26,11 @@ export const Calendar = ({ currentDate }: CalendarProps) => {
   const modalProps = useModal();
   const [startDate, setStartDate] = useState(parsedCurrentDate);
   const days = useMemo(() => getDates(startDate, 7), [startDate]);
-  const before = useMemo(
-    () => format(days[days.length - 1], DATE_FORMAT),
-    [days]
-  );
+  const before = useMemo(() => format(days[days.length - 1], DATE_FORMAT), [days]);
   const after = useMemo(() => format(days[0], DATE_FORMAT), [days]);
-  const { data } = useSWR(
-    getWordAssignmentsKey({ before, after }),
-    getWordAssignments
-  );
+  const { data } = useSWR(getWordAssignmentsKey({ before, after }), getWordAssignments);
 
-  console.log("word assignments", data);
+  console.log('word assignments', data);
   const [activeDate, setActiveDate] = useState<Date>();
 
   return (
@@ -46,9 +38,7 @@ export const Calendar = ({ currentDate }: CalendarProps) => {
       <AssignWordModal date={activeDate} {...modalProps} />
       <div className="flex flex-col gap-4">
         {days.map((day, idx) => {
-          const words = data
-            ? data.data.dates[format(day, DATE_FORMAT)]
-            : undefined;
+          const words = data ? data.data.dates[format(day, DATE_FORMAT)] : undefined;
           return (
             <div
               className="p-2 bg-cyan-800 text-white font-bold rounded flex justify-between"
@@ -58,7 +48,7 @@ export const Calendar = ({ currentDate }: CalendarProps) => {
               }}
               key={idx}
             >
-              <div>{format(day, "PPP")}</div>
+              <div>{format(day, 'PPP')}</div>
               {words && <div>{words.map((word) => word)}</div>}
             </div>
           );

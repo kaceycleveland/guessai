@@ -1,5 +1,6 @@
-import ClueRender from "./clue-render";
-import { OrderedClues } from "@/types/ordered-clues";
+import { OrderedClues } from '@/types/ordered-clues';
+
+import ClueRender from './clue-render';
 
 export const revalidate = 0;
 

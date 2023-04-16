@@ -1,6 +1,7 @@
-import { getCurrentDate } from "@/lib/utils/get-current-date";
-import { GenerateButton } from "./generate-button";
-import { WordManagement } from "./word-management";
+import { getCurrentDate } from '@/lib/utils/get-current-date';
+
+import { GenerateButton } from './generate-button';
+import { WordManagement } from './word-management';
 
 export const revalidate = 0;
 

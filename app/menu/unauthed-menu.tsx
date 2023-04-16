@@ -1,9 +1,10 @@
-"use client";
+'use client';
 
-import useModal from "@/components/modal-hooks";
-import LoginModal from "./login-modal";
-import SignupModal from "./signup-modal";
-import { Button } from "@/components/button";
+import { Button } from '@/components/button';
+import useModal from '@/components/modal-hooks';
+
+import LoginModal from './login-modal';
+import SignupModal from './signup-modal';
 
 export default function UnauthedMenu() {
   const loginModal = useModal();

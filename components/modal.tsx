@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { Dialog, Transition } from "@headlessui/react";
-import { Fragment, ReactNode, useCallback, useEffect, useState } from "react";
+import { Dialog, Transition } from '@headlessui/react';
+import { Fragment, ReactNode, useCallback, useEffect, useState } from 'react';
 
 export interface ModalProps {
   isOpen?: boolean;
@@ -10,12 +10,7 @@ export interface ModalProps {
   children?: ReactNode;
 }
 
-export default function Modal({
-  isOpen,
-  closeModal,
-  title,
-  children,
-}: ModalProps) {
+export default function Modal({ isOpen, closeModal, title, children }: ModalProps) {
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={closeModal}>
@@ -43,10 +38,7 @@ export default function Modal({
               leaveTo="opacity-0 scale-95"
             >
               <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-slate-950 p-6 text-left align-middle shadow-xl transition-all">
-                <Dialog.Title
-                  as="h3"
-                  className="text-lg font-medium leading-6 text-white"
-                >
+                <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-white">
                   {title}
                 </Dialog.Title>
                 {children}

@@ -1,20 +1,18 @@
-import Link from "next/link";
-import "./globals.css";
-import Menu from "./menu";
-import SupabaseProvider from "./supabase-provider";
-import { Suspense } from "react";
-import { Loading } from "@/components/loading";
+import Link from 'next/link';
+import { Suspense } from 'react';
+
+import { Loading } from '@/components/loading';
+
+import './globals.css';
+import Menu from './menu';
+import SupabaseProvider from './supabase-provider';
 
 export const metadata = {
-  title: "GuessAI",
-  description: "Guess a word from AI!",
+  title: 'GuessAI',
+  description: 'Guess a word from AI!',
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body>

@@ -1,1 +1,1 @@
-export const GAME_COOKIE = "guessai";
+export const GAME_COOKIE = 'guessai';

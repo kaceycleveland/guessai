@@ -1,8 +1,9 @@
-import { GetWord } from "@/types/get-word";
-import axios from "axios";
+import axios from 'axios';
 
-export const getWordsKey = ["words", "get"];
+import { GetWord } from '@/types/get-word';
+
+export const getWordsKey = ['words', 'get'];
 
 export const getWords = () => {
-  return axios.get<{ words: GetWord[] }>("/words");
+  return axios.get<{ words: GetWord[] }>('/words');
 };

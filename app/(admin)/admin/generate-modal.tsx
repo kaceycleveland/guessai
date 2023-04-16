@@ -1,15 +1,16 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/button";
-import { useCallback, useMemo } from "react";
-import Modal from "@/components/modal";
-import useSWR, { SWRConfiguration } from "swr";
-import useSWRMutation from "swr/mutation";
-import { BasicModalProps } from "@/components/modal-hooks";
-import { LoadingBackdrop } from "@/components/loading-backdrop";
-import { useRouter } from "next/navigation";
-import { getWordsFromAI, getWordsFromAIKey } from "@/lib/api/get-words-from-ai";
-import { postAddNewWord, postAddNewWordKey } from "@/lib/api/post-add-new-word";
+import { useRouter } from 'next/navigation';
+import { useCallback, useMemo } from 'react';
+import useSWR, { SWRConfiguration } from 'swr';
+import useSWRMutation from 'swr/mutation';
+
+import { Button } from '@/components/button';
+import { LoadingBackdrop } from '@/components/loading-backdrop';
+import Modal from '@/components/modal';
+import { BasicModalProps } from '@/components/modal-hooks';
+import { getWordsFromAI, getWordsFromAIKey } from '@/lib/api/get-words-from-ai';
+import { postAddNewWord, postAddNewWordKey } from '@/lib/api/post-add-new-word';
 
 const wordsSWRConfig: SWRConfiguration = {
   revalidateIfStale: false,
@@ -23,30 +24,17 @@ const assignmentSWRConfig: SWRConfiguration = {
   revalidateOnMount: false,
 };
 
-export default function GenerateModal({
-  isOpen,
-  closeModal,
-  openModal,
-}: BasicModalProps) {
+export default function GenerateModal({ isOpen, closeModal, openModal }: BasicModalProps) {
   const router = useRouter();
-  const { data, isValidating, mutate } = useSWR(
-    getWordsFromAIKey,
-    getWordsFromAI,
-    wordsSWRConfig
-  );
+  const { data, isValidating, mutate } = useSWR(getWordsFromAIKey, getWordsFromAI, wordsSWRConfig);
 
-  console.log("words data", data);
+  console.log('words data', data);
 
-  const { isMutating, trigger: assignWord } = useSWRMutation(
-    postAddNewWordKey,
-    postAddNewWord,
-    { onSuccess: router.refresh }
-  );
+  const { isMutating, trigger: assignWord } = useSWRMutation(postAddNewWordKey, postAddNewWord, {
+    onSuccess: router.refresh,
+  });
 
-  const isLoading = useMemo(
-    () => isValidating || isMutating,
-    [isValidating, isMutating]
-  );
+  const isLoading = useMemo(() => isValidating || isMutating, [isValidating, isMutating]);
 
   const handleReroll = useCallback(() => {
     mutate();
@@ -62,10 +50,7 @@ export default function GenerateModal({
   return (
     <Modal isOpen={isOpen} closeModal={closeModal} title="Generate new Words">
       <div className="relative">
-        <LoadingBackdrop
-          show={isLoading}
-          loadingProps={{ className: "bg-cyan-300" }}
-        />
+        <LoadingBackdrop show={isLoading} loadingProps={{ className: 'bg-cyan-300' }} />
 
         <LoadingBackdrop className="bg-cyan-300" />
         <div className="my-2">
@@ -84,11 +69,7 @@ export default function GenerateModal({
           <Button onClick={handleReroll} disabled={isLoading}>
             Reroll
           </Button>
-          <Button
-            variant="secondary"
-            onClick={saveWord}
-            disabled={isLoading || !data?.data.word}
-          >
+          <Button variant="secondary" onClick={saveWord} disabled={isLoading || !data?.data.word}>
             Save
           </Button>
         </div>

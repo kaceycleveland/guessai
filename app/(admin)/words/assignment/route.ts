@@ -1,15 +1,16 @@
-import { Database } from "@/lib/database.types";
-import { headers, cookies } from "next/headers";
-import { createRouteHandlerSupabaseClient } from "@supabase/auth-helpers-nextjs";
-import { hasPermission } from "@/lib/permissions/has-permission";
-import { SupabaseAdminClient } from "@/lib/supabase-admin-client";
-import { NextRequest, NextResponse } from "next/server";
-import { PutWordToDate } from "@/types/put-word-to-date";
+import { createRouteHandlerSupabaseClient } from '@supabase/auth-helpers-nextjs';
+import { cookies, headers } from 'next/headers';
+import { NextRequest, NextResponse } from 'next/server';
+
+import { Database } from '@/lib/database.types';
+import { hasPermission } from '@/lib/permissions/has-permission';
+import { SupabaseAdminClient } from '@/lib/supabase-admin-client';
+import { PutWordToDate } from '@/types/put-word-to-date';
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const after = searchParams.get("after") as string;
-  const before = searchParams.get("before") as string;
+  const after = searchParams.get('after') as string;
+  const before = searchParams.get('before') as string;
 
   console.log(after, before);
 
@@ -17,27 +18,24 @@ export async function GET(req: NextRequest) {
     headers,
     cookies,
   });
-  const permissions = await hasPermission(supabase, ["ADMIN"]);
+  const permissions = await hasPermission(supabase, ['ADMIN']);
 
   if (!permissions[0]) {
     return NextResponse.error();
   }
 
-  const getWords = await SupabaseAdminClient.from("words")
+  const getWords = await SupabaseAdminClient.from('words')
     .select(
       `
         *,
         date_assignment!inner(*)
     `
     )
-    .gte("date_assignment.date", after)
-    .lte("date_assignment.date", before);
+    .gte('date_assignment.date', after)
+    .lte('date_assignment.date', before);
 
   if (getWords.error) {
-    return NextResponse.json(
-      { message: getWords.error.message },
-      { status: 500 }
-    );
+    return NextResponse.json({ message: getWords.error.message }, { status: 500 });
   }
 
   const words = getWords.data?.length ? getWords.data : undefined;
@@ -49,7 +47,7 @@ export async function GET(req: NextRequest) {
   const dateReturn: Record<string, string[]> = {};
   words.forEach((wordBody) => {
     if (wordBody.date_assignment) {
-      if ("length" in wordBody.date_assignment) {
+      if ('length' in wordBody.date_assignment) {
         wordBody.date_assignment.forEach(({ date }) => {
           if (wordBody.word) {
             if (dateReturn[date]) {
@@ -82,19 +80,19 @@ export async function PUT(req: NextRequest) {
     headers,
     cookies,
   });
-  const permissions = await hasPermission(supabase, ["ADMIN"]);
+  const permissions = await hasPermission(supabase, ['ADMIN']);
 
   if (!permissions[0]) {
     return;
   }
 
-  const putWord = await SupabaseAdminClient.from("date_assignment")
+  const putWord = await SupabaseAdminClient.from('date_assignment')
     .upsert(
       {
         date,
         word_id,
       },
-      { onConflict: "date" }
+      { onConflict: 'date' }
     )
     .select();
 
@@ -102,7 +100,7 @@ export async function PUT(req: NextRequest) {
 
   if (putWord.error) {
     let status = 200;
-    if (putWord.error.code !== "23505") status = 400;
+    if (putWord.error.code !== '23505') status = 400;
     return NextResponse.json({ message: putWord.error.message }, { status });
   }
 
