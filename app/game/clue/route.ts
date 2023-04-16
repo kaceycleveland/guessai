@@ -12,6 +12,7 @@ import { narrowItems } from '@/lib/utils/narrow-items';
 import { GenerateWord } from '@/types/generate-word';
 
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export async function POST() {
   const supabase = createRouteHandlerSupabaseClient<Database>({
