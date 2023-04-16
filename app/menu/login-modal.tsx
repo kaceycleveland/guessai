@@ -44,7 +44,7 @@ export default function LoginModal({ isOpen, closeModal, openModal }: BasicModal
 
   return (
     <>
-      <LoadingBackdrop isFullScreen show={isPending} loadingProps={{ className: 'bg-cyan-500' }} />
+      <LoadingBackdrop show={isPending} loadingProps={{ className: 'bg-cyan-500' }} />
       <Modal isOpen={isOpen} closeModal={closeModal} title="Login">
         <form onSubmit={submitSignup}>
           <div className="mt-2 flex flex-col gap-2">
