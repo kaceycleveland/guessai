@@ -72,7 +72,8 @@ export async function POST() {
           id: gameAndClues.data[0].id,
           clues: narrowItems(gameAndClues.data[0].given_clues)
             .map((val) => narrowItems(val.clues))
-            .flat(),
+            .flat()
+            .sort((prev, next) => prev.sort_order - next.sort_order),
         }
       : undefined;
 

@@ -121,6 +121,7 @@ export default async function Page() {
           given_clue_id: items.id,
           clue: narrowItems(items.clues)[0],
         }))
+        .sort((prev, next) => prev.clue.sort_order - next.clue.sort_order)
         .flat()
         .map((items) => {
           const foundGuesses = narrowedGuesses.filter((guessEntry) => items.given_clue_id === guessEntry.given_clue_id);
