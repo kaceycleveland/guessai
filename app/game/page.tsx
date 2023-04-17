@@ -10,6 +10,8 @@ import { DATE_FORMAT, parseToDate } from '@/lib/utils/date-format';
 import { getCurrentDate } from '@/lib/utils/get-current-date';
 import { narrowItems } from '@/lib/utils/narrow-items';
 
+export const revalidate = 60;
+
 export default async function GameHistoryPage() {
   const supabase = createServerComponentSupabaseClient<Database>({
     headers,

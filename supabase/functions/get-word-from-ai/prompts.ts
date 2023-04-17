@@ -1,10 +1,10 @@
-import { CreateChatCompletionRequest } from 'openai';
+import { ChatCompletionOptions } from 'https://deno.land/x/openai/mod.ts';
 
-export const DEFAULT_REQUEST_SETTINGS: Omit<CreateChatCompletionRequest, 'messages'> = {
+export const DEFAULT_REQUEST_SETTINGS: Omit<ChatCompletionOptions, 'messages'> = {
   model: 'gpt-3.5-turbo',
-  presence_penalty: 1,
-  frequency_penalty: 0.5,
-  max_tokens: 500,
+  presencePenalty: 1,
+  frequencyPenalty: 0.5,
+  maxTokens: 500,
 };
 
 export const GET_WORD_PROMPT = `
