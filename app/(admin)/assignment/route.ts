@@ -7,6 +7,9 @@ import { hasPermission } from '@/lib/permissions/has-permission';
 import { SupabaseAdminClient } from '@/lib/supabase-admin-client';
 import { GenerateWord } from '@/types/generate-word';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export async function POST(request: NextRequest) {
   const { word, clues }: GenerateWord = await request.json();
 

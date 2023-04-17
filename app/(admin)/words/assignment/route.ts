@@ -7,6 +7,9 @@ import { hasPermission } from '@/lib/permissions/has-permission';
 import { SupabaseAdminClient } from '@/lib/supabase-admin-client';
 import { PutWordToDate } from '@/types/put-word-to-date';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const after = searchParams.get('after') as string;
