@@ -6,7 +6,7 @@ import { notFound } from 'next/navigation';
 
 import { Database } from '@/lib/database.types';
 import { SupabaseAdminClient } from '@/lib/supabase-admin-client';
-import { DATE_FORMAT, parseToDate } from '@/lib/utils/date-format';
+import { parseToDate } from '@/lib/utils/date-format';
 import { getCurrentDate } from '@/lib/utils/get-current-date';
 import { narrowItems } from '@/lib/utils/narrow-items';
 
@@ -64,6 +64,9 @@ export default async function GameHistoryPage() {
     <div className="flex w-full max-w-4xl flex-col gap-4 p-4 text-white">
       {!gamesNarrowed.length && (
         <div className="w-full text-center">{`No completed or past games were found. Try out today's clue and check box again!`}</div>
+      )}
+      {gamesNarrowed.length && (
+        <div className="w-full text-center">{`Games may take some time to progate and update on this page.`}</div>
       )}
       {gamesNarrowed.map((game, key) => (
         <div key={key} className="flex flex-col justify-between gap-2 rounded bg-slate-950 p-4 sm:flex-row">
