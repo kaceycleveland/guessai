@@ -1,8 +1,11 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
 
-First, run the development server:
+
+<p align="center">
+<img width="868" height="750" src="/public/guessai.png">
+</p>
+
+## GuessAI
 
 ```bash
 npm run dev
