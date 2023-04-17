@@ -10,8 +10,6 @@ import { GenerateWord } from '@/types/generate-word';
 export async function POST(request: NextRequest) {
   const { word, clues }: GenerateWord = await request.json();
 
-  console.log(word, clues);
-
   const supabase = createRouteHandlerSupabaseClient<Database>({
     headers,
     cookies,

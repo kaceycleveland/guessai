@@ -12,8 +12,6 @@ export async function GET(req: NextRequest) {
   const after = searchParams.get('after') as string;
   const before = searchParams.get('before') as string;
 
-  console.log(after, before);
-
   const supabase = createRouteHandlerSupabaseClient<Database>({
     headers,
     cookies,
@@ -41,8 +39,6 @@ export async function GET(req: NextRequest) {
   const words = getWords.data?.length ? getWords.data : undefined;
 
   if (!words) return NextResponse.error();
-
-  console.log(words);
 
   const dateReturn: Record<string, string[]> = {};
   words.forEach((wordBody) => {
@@ -75,7 +71,6 @@ export async function GET(req: NextRequest) {
 export async function PUT(req: NextRequest) {
   const { date, word_id }: PutWordToDate = await req.json();
 
-  console.log(date, word_id);
   const supabase = createRouteHandlerSupabaseClient<Database>({
     headers,
     cookies,
@@ -95,8 +90,6 @@ export async function PUT(req: NextRequest) {
       { onConflict: 'date' }
     )
     .select();
-
-  console.log(putWord);
 
   if (putWord.error) {
     let status = 200;

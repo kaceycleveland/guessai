@@ -50,8 +50,6 @@ export default async function Page() {
     setNewGameToNewWord = true;
   }
 
-  console.log('SET NEW GAME', foundGame?.word_id, currentWordId);
-
   let firstClues: CluesArray = [];
   const isNewGameFromAuthedUser = foundGame && foundGame.user_id === userId; // If there is no authed user and there is a user_id attached to the game
   // If there is no anon game, render the first clue of today.
@@ -76,7 +74,6 @@ export default async function Page() {
       .eq('id', foundGame.id)
       .is('user_id', null)
       .select();
-    console.log('updateGameToUser', updateGameToUser);
     if (updateGameToUser.error) throw new Error(updateGameToUser.error.message);
   }
 
@@ -105,7 +102,7 @@ export default async function Page() {
 `
       )
       .eq('word_id', currentWordId);
-    console.log(userId);
+
     // Get the given clues for the game
     if (userId) {
       givenClues = await getGivenCluesQuery.eq('user_id', userId).eq('date', currentDate);
@@ -145,7 +142,7 @@ export default async function Page() {
   const isGuessBlocked = recentClue.guesses?.length === recentClue.clue.max_attempts;
 
   return (
-    <div className="relative flex w-full max-w-4xl flex-col gap-4">
+    <div className="relative flex w-full max-w-4xl flex-col items-center gap-4">
       <RobotImage hasContent={Boolean(clues.length > 1 || (clues?.[0].guesses && clues?.[0].guesses.length > 0))} />
       {/* @ts-ignore */}
       {totalCluesAvailable && <Clues clues={clues} total={totalCluesAvailable} />}

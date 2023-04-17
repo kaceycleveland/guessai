@@ -21,22 +21,19 @@ export async function POST() {
   const { data: userData, error: authError } = await supabase.auth.getUser();
 
   if (userData.user?.id) {
-    console.log(`Attempting to assign game to user ${userData.user?.id}.`);
+    console.log(`[game/assignment] Attempting to assign game to user ${userData.user?.id}.`);
     const authedCurrentGame = await SupabaseAdminClient.from('game')
       .select(`id`)
       .eq('user_id', userData.user.id)
       .eq('date', currentDate);
 
     if (authedCurrentGame.data?.length) {
-      console.log('AUTHED CURRENT GAME', authedCurrentGame);
-      console.log(`Found existing game ${authedCurrentGame.data[0].id}`);
+      console.log(`[game/assignment] Found existing game ${authedCurrentGame.data[0].id}`);
 
       return NextResponse.json({ message: 'Game exists', code: 1 }, { status: 200 });
     }
 
     const gameCookie = cookies().get(GAME_COOKIE)?.value;
-
-    console.log('FOUND COOKIE', gameCookie);
 
     if (gameCookie) {
       const applyGameOwnership = await SupabaseAdminClient.from('game')
@@ -44,10 +41,8 @@ export async function POST() {
         .eq('id', gameCookie)
         .select();
 
-      console.log('APPLIED GAME OWNERSHIP TO COOKIE', applyGameOwnership);
-
       if (applyGameOwnership.data?.length === 1) {
-        console.log(`user ${userData.user.id} took ownership of ${gameCookie}`);
+        console.log(`[game/assignment] user ${userData.user.id} took ownership of ${gameCookie}`);
         return NextResponse.json({ message: 'success', code: 0 }, { status: 200 });
       }
     }

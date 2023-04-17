@@ -27,14 +27,10 @@ export async function GET() {
     return NextResponse.json({ message: 'Insufficent permissions' }, { status: 401 });
   }
 
-  console.log('permissions', permissions);
-
   const getWords = await SupabaseAdminClient.from('words').select(`
       id,
       word
   `);
-
-  console.log(getWords);
 
   const words = getWords.data?.length ? getWords.data : undefined;
 

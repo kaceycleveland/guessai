@@ -49,12 +49,10 @@ export default function GuessBox({ isClueBlocked, isGuessBlocked, isGameFinished
   const { register, formState, handleSubmit, reset } = useForm<GuessWord>({ mode: 'all' });
   const errors = useMemo(() => formState.errors, [formState]);
 
-  console.log('errors', errors);
   const handleGuess = useCallback(
     handleSubmit(async (guessBody) => {
       const body = await postGuess(guessBody);
       if (body?.data.game_id) {
-        console.log('SETTING COOKIE to', body.data.game_id);
         document.cookie = `${GAME_COOKIE}=${body.data.game_id}`;
       }
       const correct = body?.data.correct;
@@ -125,7 +123,7 @@ export default function GuessBox({ isClueBlocked, isGuessBlocked, isGameFinished
   }
 
   return (
-    <div className="bg-opacity/90 sticky bottom-4 flex flex-col gap-4 rounded bg-slate-950 p-4 shadow-lg">
+    <div className="bg-opacity/90 sticky bottom-4 flex w-full flex-col gap-4 rounded bg-slate-950 p-4 shadow-lg">
       {bodyContent}
     </div>
   );

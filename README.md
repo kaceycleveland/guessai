@@ -2,7 +2,7 @@
 
 
 <p align="center">
-<img width="868" height="750" src="/public/guessai.png">
+<img width="434" height="375" src="/public/guessai.png">
 </p>
 
 ## GuessAI

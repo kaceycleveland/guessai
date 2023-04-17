@@ -23,7 +23,7 @@ interface RobotImageProps {
 export const RobotImage = ({ hasContent }: RobotImageProps) => {
   return (
     <motion.div
-      className="absolute mx-auto flex w-full justify-center"
+      className="absolute mx-auto w-full max-w-none justify-center sm:max-w-lg"
       variants={variants}
       initial="initial"
       animate={hasContent ? 'hasContent' : 'initial'}

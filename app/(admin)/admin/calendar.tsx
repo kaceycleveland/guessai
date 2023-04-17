@@ -21,7 +21,6 @@ interface CalendarProps {
 }
 
 export const Calendar = ({ currentDate }: CalendarProps) => {
-  console.log(currentDate);
   const parsedCurrentDate = useMemo(() => parseToDate(currentDate), []);
   const modalProps = useModal();
   const [startDate, setStartDate] = useState(parsedCurrentDate);
@@ -30,7 +29,6 @@ export const Calendar = ({ currentDate }: CalendarProps) => {
   const after = useMemo(() => format(days[0], DATE_FORMAT), [days]);
   const { data } = useSWR(getWordAssignmentsKey({ before, after }), getWordAssignments);
 
-  console.log('word assignments', data);
   const [activeDate, setActiveDate] = useState<Date>();
 
   return (

@@ -11,8 +11,6 @@ export const hasPermission = async (supabase: SupabaseClient<Database>, permissi
     roles ( id, name )
     `);
 
-  console.log('USER PERMISSIONS', userPermissions);
-
   return permissions.map((requestedPermission) =>
     Boolean(
       userPermissions.data?.find(({ roles }) => {

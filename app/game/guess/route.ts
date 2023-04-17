@@ -38,8 +38,6 @@ export async function POST(request: NextRequest) {
   const foundCookie = request.cookies.get(GAME_COOKIE)?.value;
   const gameCookie = foundCookie ? foundCookie : undefined;
 
-  console.log('GUESSING COOKIE', gameCookie);
-
   const gameQuery = SupabaseAdminClient.from('game')
     .select(
       `
@@ -102,7 +100,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ message: 'There was an issue finding the given_clue_id.' }, { status: 500 });
 
       console.log(
-        `Guessing on a brand new game ${game.data.id} guess '${word}' with correct status '${correct}' with ${firstClueNarrowed[0].max_attempts} max guesses`
+        `[game/guess] Guessing on a brand new game ${game.data.id} guess '${word}' with correct status '${correct}' with ${firstClueNarrowed[0].max_attempts} max guesses`
       );
 
       const guessInsertResult = await SupabaseAdminClient.from('guesses').insert({
@@ -149,7 +147,7 @@ export async function POST(request: NextRequest) {
     }
 
     console.log(
-      `Guessing on game ${gameId} guess '${word}' with correct status '${correct}' with ${givenClue.guesses.length} guesses and ${givenClue.clue.max_attempts} max guesses`
+      `[game/guess] Guessing on game ${gameId} guess '${word}' with correct status '${correct}' with ${givenClue.guesses.length} guesses and ${givenClue.clue.max_attempts} max guesses`
     );
 
     const guessInsertQuery = await SupabaseAdminClient.from('guesses').insert({

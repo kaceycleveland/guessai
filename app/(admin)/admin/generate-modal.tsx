@@ -29,7 +29,6 @@ export default function GenerateModal({ isOpen, closeModal, openModal }: BasicMo
 
   const saveWord = useCallback(() => {
     if (data) {
-      console.log(data);
       assignWord(data.data);
     }
   }, [assignWord, data]);

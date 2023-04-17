@@ -31,9 +31,8 @@ export async function POST() {
 
   const userId = userData.user?.id;
   const gameCookie = cookies().get(GAME_COOKIE)?.value;
-  console.log('FOUND COOKIE', gameCookie);
 
-  console.log(`Requesting clue on ${currentDate} for user ${userId}`);
+  console.log(`[game/clue] Requesting clue on ${currentDate} for user ${userId}`);
 
   let gameAndClues;
   // Authed flow
@@ -51,7 +50,6 @@ export async function POST() {
     .eq('word_id', currentWordId)
     .eq('date', currentDate);
   if (userId) {
-    console.log('ENTERED AUTH FLOW', userData.user);
     gameAndClues = await cluesQuery.eq('user_id', userId);
   } else if (gameCookie) {
     gameAndClues = await cluesQuery.is('user_id', null).eq('id', gameCookie);
@@ -114,13 +112,6 @@ export async function POST() {
     const { id: foundGameId, clues: givenClues } = narrowedGamesAndClues;
     const lastClue = givenClues[givenClues.length - 1];
 
-    console.log('LAST CLUE', lastClue);
-
-    // const foundNextClue = await SupabaseAdminClient.from("game")
-    //   .select(`id,words!inner(clues!inner(id, clue, sort_order))`)
-    //   .eq("words.clues.sort_order", ++lastClue.sort_order)
-    //   .eq("id", foundGameId);
-
     const foundNextClue = await SupabaseAdminClient.from('game')
       .select(
         `id,
@@ -140,14 +131,11 @@ export async function POST() {
       .flat()
       .map((data) => narrowItems(data.clues))
       .flat();
-    console.log('FOUND NEXT CLUE', foundNextClue.data?.[0].id, nextClues);
 
     const narrowedClues = narrowItems(foundNextClue.data.map((clueData) => narrowItems(clueData.words)))
       .flat()
       .map((val) => narrowItems(val.clues))
       .flat();
-
-    console.log('NARROWED CLUES', narrowedClues);
 
     await SupabaseAdminClient.from('given_clues').upsert({
       game_id: foundGameId,
@@ -155,7 +143,7 @@ export async function POST() {
     });
 
     console.log(
-      `Giving user ${userId} clue ${narrowedClues[0].id} (order ${narrowedClues[0].sort_order}) in game ${foundGameId}`
+      `[game/clue] Giving user ${userId} clue ${narrowedClues[0].id} (order ${narrowedClues[0].sort_order}) in game ${foundGameId}`
     );
     return NextResponse.json({ message: 'success' }, { status: 200 });
   }
