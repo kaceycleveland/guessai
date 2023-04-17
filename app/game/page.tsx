@@ -15,14 +15,9 @@ export default async function GameHistoryPage() {
     headers,
     cookies,
   });
-  const initData = await Promise.all([
-    SupabaseAdminClient.rpc('get_current_word'),
-    getCurrentDate(),
-    supabase.auth.getUser(),
-  ]);
-  const { data: currentWordId } = initData[0];
-  const { data: currentDate } = initData[1];
-  const { data: userData } = initData[2];
+  const initData = await Promise.all([getCurrentDate(), supabase.auth.getUser()]);
+  const { data: currentDate } = initData[0];
+  const { data: userData } = initData[1];
   const userId = userData.user?.id;
 
   if (!userId) notFound();
@@ -65,6 +60,9 @@ export default async function GameHistoryPage() {
 
   return (
     <div className="flex w-full max-w-4xl flex-col gap-4 p-4 text-white">
+      {!gamesNarrowed.length && (
+        <div className="w-full text-center">{`No completed or past games were found. Try out today's clue and check box again!`}</div>
+      )}
       {gamesNarrowed.map((game, key) => (
         <div key={key} className="flex flex-col justify-between gap-2 rounded bg-slate-950 p-4 sm:flex-row">
           <div className="flex justify-between gap-4">

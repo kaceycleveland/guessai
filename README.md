@@ -13,7 +13,7 @@
 
 GuessAI is an AI powered word guessing game. You get a given amount of guesses per clue and a certain amount of clues as well to guess a word. GuessAI is "AI powered" in the sense that the main functionality of the game is sourced from AI. The OpenAI API is prompted to generate new words and clues to go with those words so every clue and word you see is generated via AI!
 
-I did this side project in about the span of a week for Supabase's AI themed hackathon; I was already experimenting with AI to a certain degree so this was a great opportunity to put some of those experimentations to use! In retrospect, I probably would not have done something to this calibre as a solo developer :upside_down_face:. While it was rewarding, it took all of my allocated video game time for the past week to finish! None the less, I am happy with the turn out and will keep iterating on it.
+I did this side project in about the span of a week for Supabase's AI themed hackathon; I was already experimenting with AI to a certain degree so this was a great opportunity to put some of those experimentations to use! In retrospect, I probably would not have done something to this caliber as a solo developer :upside_down_face:. While it was rewarding, it took all of my allocated video game time for the past week to finish! None the less, I am happy with the turn out and will keep iterating on it.
 
 See the section below for a high level technical walkthrough of how guessing works and AI is utilized to generate new words and clues.
 
