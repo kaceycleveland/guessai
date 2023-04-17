@@ -33,5 +33,12 @@ export const Countdown = ({ timeInSeconds }: CountdownProps) => {
     return () => clearInterval(interval);
   }, [setCountdown]);
 
-  return <span>{formatDuration(intervalToDuration({ start: 0, end: countdown * 1000 }))}</span>;
+  return (
+    <div className="flex flex-col text-right">
+      <div className="text-xs font-semibold text-slate-400">Next word in</div>
+      <div className="text-sm font-semibold text-slate-300">
+        {formatDuration(intervalToDuration({ start: 0, end: countdown * 1000 }), { format: ['hours', 'minutes'] })}
+      </div>
+    </div>
+  );
 };

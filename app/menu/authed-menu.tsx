@@ -46,9 +46,12 @@ export default function AuthedMenu() {
       <LoadingBackdrop show={isPending} loadingProps={{ className: 'bg-cyan-500' }} />
       <Menu as="div" className="relative inline-block text-left">
         <div>
-          <Menu.Button className="bg-opacity/20 hover:bg-opacity/30 focus-visible:ring-opacity/75 inline-flex w-full justify-center rounded-md bg-black px-4 py-2 text-sm font-medium text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white">
-            Options
-            <ChevronDownIcon className="-mr-1 ml-2 h-5 w-5 text-violet-200 hover:text-violet-100" aria-hidden="true" />
+          <Menu.Button className="bg-opacity/20 hover:bg-opacity/30 focus-visible:ring-opacity/75 inline-flex w-full justify-center rounded-md bg-slate-950 p-3 text-sm font-medium text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white md:px-4">
+            <span className="hidden md:block">Options</span>
+            <ChevronDownIcon
+              className="h-5 w-5 text-violet-200 hover:text-violet-100 md:-mr-1 md:ml-2"
+              aria-hidden="true"
+            />
           </Menu.Button>
         </div>
         <Transition
