@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useCallback, useMemo } from 'react';
+import { toast } from 'react-toastify';
 import useSWRMutation from 'swr/mutation';
 
 import { useSupabase } from '@/app/supabase-provider';
@@ -26,7 +27,10 @@ export default function GenerateModal({ isOpen, closeModal, openModal }: BasicMo
   });
 
   const { isMutating: isAddingNewWord, trigger: assignWord } = useSWRMutation(postAddNewWordKey, postAddNewWord, {
-    onSuccess: router.refresh,
+    onSuccess: () => {
+      toast(`Saved new word`, { type: 'success' });
+      router.refresh();
+    },
   });
 
   const hasWordData = Boolean(data?.data?.word);

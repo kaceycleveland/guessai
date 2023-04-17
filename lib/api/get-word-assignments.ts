@@ -6,7 +6,7 @@ interface DateRangeQueryParams {
 }
 
 interface GetWordAssignmentsResponse {
-  dates: Record<string, string[]>;
+  dates: Record<string, { word: string; id: number }[]>;
 }
 
 export const getWordAssignmentsKey = (params?: DateRangeQueryParams) =>

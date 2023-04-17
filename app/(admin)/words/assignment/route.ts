@@ -43,25 +43,25 @@ export async function GET(req: NextRequest) {
 
   if (!words) return NextResponse.error();
 
-  const dateReturn: Record<string, string[]> = {};
+  const dateReturn: Record<string, { word: string; id: number }[]> = {};
   words.forEach((wordBody) => {
     if (wordBody.date_assignment) {
       if ('length' in wordBody.date_assignment) {
         wordBody.date_assignment.forEach(({ date }) => {
           if (wordBody.word) {
             if (dateReturn[date]) {
-              dateReturn[date].push(wordBody.word);
+              dateReturn[date].push({ id: wordBody.id, word: wordBody.word });
             } else {
-              dateReturn[date] = [wordBody.word];
+              dateReturn[date] = [{ id: wordBody.id, word: wordBody.word }];
             }
           }
         });
       } else {
         if (wordBody.word) {
           if (dateReturn[wordBody.date_assignment.date]) {
-            dateReturn[wordBody.date_assignment.date].push(wordBody.word);
+            dateReturn[wordBody.date_assignment.date].push({ id: wordBody.id, word: wordBody.word });
           } else {
-            dateReturn[wordBody.date_assignment.date] = [wordBody.word];
+            dateReturn[wordBody.date_assignment.date] = [{ id: wordBody.id, word: wordBody.word }];
           }
         }
       }

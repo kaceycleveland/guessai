@@ -3,7 +3,7 @@
 import clsx from 'clsx';
 import { format } from 'date-fns';
 import { useRouter } from 'next/navigation';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 import useSWR, { mutate } from 'swr';
 import useSWRMutation from 'swr/mutation';
@@ -20,9 +20,10 @@ import { DATE_FORMAT } from '@/lib/utils/date-format';
 
 interface AssignWordModalProps extends BasicModalProps {
   date?: Date;
+  wordId?: number;
 }
 
-export default function AssignWordModal({ date, isOpen, closeModal, openModal }: AssignWordModalProps) {
+export default function AssignWordModal({ date, wordId, isOpen, closeModal, openModal }: AssignWordModalProps) {
   const [activeWordId, setActiveWordId] = useState<number>();
   const router = useRouter();
   const { data, isValidating, isLoading: isLoadingWords } = useSWR(getWordsKey, getWords);
@@ -61,9 +62,10 @@ export default function AssignWordModal({ date, isOpen, closeModal, openModal }:
             return (
               <div
                 key={idx}
-                className={clsx('my-2 rounded p-2 text-center text-xl font-bold text-white', {
-                  'bg-slate-900': word.id !== activeWordId,
-                  'bg-cyan-900': word.id === activeWordId,
+                className={clsx('my-2 rounded p-2 text-center text-xl font-bold text-white transition-colors', {
+                  'bg-slate-900 hover:bg-slate-700 cursor-pointer': word.id !== activeWordId,
+                  'bg-cyan-900 pointer-events-none': word.id === activeWordId,
+                  'bg-violet-900 pointer-events-none': word.id === wordId,
                 })}
                 onClick={() => setActiveWordId(word.id)}
               >

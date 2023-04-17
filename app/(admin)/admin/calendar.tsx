@@ -32,10 +32,17 @@ export const Calendar = ({ currentDate }: CalendarProps) => {
   const { data, isValidating } = useSWR(getWordAssignmentsKey({ before, after }), getWordAssignments);
 
   const [activeDate, setActiveDate] = useState<Date>();
+  const activeDateWord = useMemo(() => {
+    if (activeDate) {
+      const words = data ? data.data.dates[format(activeDate, DATE_FORMAT)] : undefined;
+      const foundWord = words ? words[0] : undefined;
+      return foundWord;
+    }
+  }, [activeDate, data]);
 
   return (
     <>
-      <AssignWordModal date={activeDate} {...modalProps} />
+      <AssignWordModal date={activeDate} wordId={activeDateWord?.id} {...modalProps} />
       <div className="relative flex w-full flex-col gap-4">
         <div
           className={clsx('absolute inset-0 flex items-center justify-center backdrop-blur-sm transition-opacity', {
@@ -47,6 +54,7 @@ export const Calendar = ({ currentDate }: CalendarProps) => {
         </div>
         {days.map((day, idx) => {
           const words = data ? data.data.dates[format(day, DATE_FORMAT)] : undefined;
+          const foundWord = words ? words[0] : undefined;
           return (
             <div
               className="flex h-14 cursor-pointer items-center justify-between rounded bg-cyan-800 p-2 font-bold text-white transition-colors hover:bg-cyan-600"
@@ -57,7 +65,7 @@ export const Calendar = ({ currentDate }: CalendarProps) => {
               key={idx}
             >
               <div className="ml-2">{format(day, 'PPP')}</div>
-              {words && <div className="rounded bg-slate-800 p-2">{words.map((word) => word)}</div>}
+              {foundWord && <div className="rounded bg-slate-800 p-2">{foundWord.word}</div>}
             </div>
           );
         })}

@@ -16,6 +16,7 @@ Link to hosted demo: [https://guessai.vercel.app/](https://guessai.vercel.app/)
 Only team member is me @kaceycleveland
 My `Supabase` usage:
 - I used a database for all my data storage.
+- I used a `Supabase` edge function to make calls and pull data for words and clues from OpenAI's API.
 - I used a database as the primary "time tracker" by querying for `CURRENT_DATE` against the database in javascript via an RPC call.
 - I used multiple other RPC calls to get other data such as the countdown timer in the top nav to get the `INTERVAL` until the next game/word.
 - I used Supabase Authentication in a experimental NextJS 13 app with the example given in the documentation.
@@ -77,7 +78,7 @@ I utilized AI in a couple different ways:
 
 See the prompts used [here](app/(admin)/words/prompts.ts)
 
-1. The prompts linked above are sent in order to OpenAI API.
+1. The prompts linked above are sent in order to OpenAI API from a `Supabase` edge function.
 2. Between prompts, cleaning is done on the returned results.
    - Sometimes clues would give away the answer by using the word; I filter these out.
    - Sometimes numbering or bullet points were used; I filter those off the beginning.
@@ -108,3 +109,4 @@ On intial page load, there is some querying to `Supabase` but ultimately not too
 - Automating the generation of words from OpenAI API and assigning them to the next day.
 - Better messaging on "what to do" on the homepage with tooltips.
 - Better API checks. Overall a lot is in place but the UI safe guards more so then the API currently.
+- Cron job to clear out old anonymous game instances.
