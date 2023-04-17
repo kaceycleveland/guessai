@@ -34,20 +34,20 @@ export const Calendar = ({ currentDate }: CalendarProps) => {
   return (
     <>
       <AssignWordModal date={activeDate} {...modalProps} />
-      <div className="flex flex-col gap-4">
+      <div className="flex w-full flex-col gap-4">
         {days.map((day, idx) => {
           const words = data ? data.data.dates[format(day, DATE_FORMAT)] : undefined;
           return (
             <div
-              className="flex justify-between rounded bg-cyan-800 p-2 font-bold text-white"
+              className="flex h-14 cursor-pointer items-center justify-between rounded bg-cyan-800 p-2 font-bold text-white transition-colors hover:bg-cyan-600"
               onClick={() => {
                 setActiveDate(day);
                 modalProps.openModal();
               }}
               key={idx}
             >
-              <div>{format(day, 'PPP')}</div>
-              {words && <div>{words.map((word) => word)}</div>}
+              <div className="ml-2">{format(day, 'PPP')}</div>
+              {words && <div className="rounded bg-slate-800 p-2">{words.map((word) => word)}</div>}
             </div>
           );
         })}

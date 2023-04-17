@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { format } from 'date-fns';
 import { useRouter } from 'next/navigation';
 import { useCallback, useMemo, useState } from 'react';
+import { toast } from 'react-toastify';
 import useSWR, { mutate } from 'swr';
 import useSWRMutation from 'swr/mutation';
 
@@ -34,6 +35,8 @@ export default function AssignWordModal({ date, isOpen, closeModal, openModal }:
         }
       });
       router.refresh();
+      toast('Word assignment changed.', { type: 'success' });
+      closeModal();
     },
   });
 

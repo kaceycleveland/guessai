@@ -30,10 +30,3 @@ Remove any clues that include any words similar to the word.
 Have each clue be a max of two sentences long.
 Write the clues out with the given requirements below:
 `;
-
-export const GET_CLUE_DETAILS_PROMPT = `
-Explain how each clue is relevant to the word in detail.
-You are allowed to use the word in your explanations.
-Include each clue with its explanation.
-Separate each clue and explanation by a new line.
-`;

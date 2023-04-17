@@ -9,9 +9,9 @@ export default async function AdminPage() {
   const { data: currentDate } = await getCurrentDate();
   if (!currentDate) throw Error();
   return (
-    <div className="w-full ">
-      <WordManagement currentDate={currentDate} />
+    <div className="flex w-full max-w-4xl flex-col gap-4">
       <GenerateButton />
+      <WordManagement currentDate={currentDate} />
     </div>
   );
 }
