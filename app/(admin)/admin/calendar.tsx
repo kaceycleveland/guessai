@@ -1,9 +1,11 @@
 'use client';
 
+import clsx from 'clsx';
 import { addDays, format } from 'date-fns';
 import { useMemo, useState } from 'react';
 import useSWR from 'swr';
 
+import { Loading } from '@/components/loading';
 import useModal from '@/components/modal-hooks';
 import { getWordAssignments, getWordAssignmentsKey } from '@/lib/api/get-word-assignments';
 import { DATE_FORMAT, parseToDate } from '@/lib/utils/date-format';
@@ -27,14 +29,22 @@ export const Calendar = ({ currentDate }: CalendarProps) => {
   const days = useMemo(() => getDates(startDate, 7), [startDate]);
   const before = useMemo(() => format(days[days.length - 1], DATE_FORMAT), [days]);
   const after = useMemo(() => format(days[0], DATE_FORMAT), [days]);
-  const { data } = useSWR(getWordAssignmentsKey({ before, after }), getWordAssignments);
+  const { data, isValidating } = useSWR(getWordAssignmentsKey({ before, after }), getWordAssignments);
 
   const [activeDate, setActiveDate] = useState<Date>();
 
   return (
     <>
       <AssignWordModal date={activeDate} {...modalProps} />
-      <div className="flex w-full flex-col gap-4">
+      <div className="relative flex w-full flex-col gap-4">
+        <div
+          className={clsx('absolute inset-0 flex items-center justify-center backdrop-blur-sm transition-opacity', {
+            'opacity-0 pointer-events-none': !isValidating,
+            'opacity-100 pointer-events-auto': isValidating,
+          })}
+        >
+          <Loading className="bg-cyan-500" />
+        </div>
         {days.map((day, idx) => {
           const words = data ? data.data.dates[format(day, DATE_FORMAT)] : undefined;
           return (
