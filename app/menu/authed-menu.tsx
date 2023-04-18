@@ -3,10 +3,10 @@
 import { Menu, Transition } from '@headlessui/react';
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
 import { useRouter } from 'next/navigation';
-import { Fragment, useCallback, useEffect, useMemo, useRef, useState, useTransition } from 'react';
+import { Fragment, useCallback, useEffect, useState, useTransition } from 'react';
 
 import { LoadingBackdrop } from '@/components/loading-backdrop';
-import { GAME_COOKIE } from '@/lib/api/cookie-game';
+import { GAME_COOKIE } from '@/lib/cookie-game';
 import { hasPermission } from '@/lib/permissions/has-permission';
 
 import { useSupabase } from '../supabase-provider';

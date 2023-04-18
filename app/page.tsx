@@ -2,7 +2,7 @@ import { createServerComponentSupabaseClient } from '@supabase/auth-helpers-next
 import { cookies, headers } from 'next/headers';
 import Image from 'next/image';
 
-import { GAME_COOKIE } from '@/lib/api/cookie-game';
+import { GAME_COOKIE } from '@/lib/cookie-game';
 import { Database } from '@/lib/database.types';
 import { SupabaseAdminClient } from '@/lib/supabase-admin-client';
 import { getCurrentDate } from '@/lib/utils/get-current-date';

@@ -11,8 +11,8 @@ import { Input } from '@/components/input';
 import { LoadingBackdrop } from '@/components/loading-backdrop';
 import Modal from '@/components/modal';
 import { BasicModalProps } from '@/components/modal-hooks';
-import { GAME_COOKIE } from '@/lib/api/cookie-game';
-import { postGameAssignment, postGameAssignmentKey } from '@/lib/api/post-game-assignment';
+import { postGameAssignment, postGameAssignmentKey } from '@/lib/client-api/post-game-assignment';
+import { GAME_COOKIE } from '@/lib/cookie-game';
 
 import { useSupabase } from '../supabase-provider';
 

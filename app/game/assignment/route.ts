@@ -2,7 +2,7 @@ import { createRouteHandlerSupabaseClient } from '@supabase/auth-helpers-nextjs'
 import { cookies, headers } from 'next/headers';
 import { NextResponse } from 'next/server';
 
-import { GAME_COOKIE } from '@/lib/api/cookie-game';
+import { GAME_COOKIE } from '@/lib/cookie-game';
 import { Database } from '@/lib/database.types';
 import { SupabaseAdminClient } from '@/lib/supabase-admin-client';
 import { getCurrentDate } from '@/lib/utils/get-current-date';

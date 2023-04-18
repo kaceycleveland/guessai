@@ -10,7 +10,7 @@ import { Button } from '@/components/button';
 import { LoadingBackdrop } from '@/components/loading-backdrop';
 import Modal from '@/components/modal';
 import { BasicModalProps } from '@/components/modal-hooks';
-import { postAddNewWord, postAddNewWordKey } from '@/lib/api/post-add-new-word';
+import { postAddNewWord, postAddNewWordKey } from '@/lib/client-api/post-add-new-word';
 import { GenerateWord } from '@/types/generate-word';
 
 const getWordsFromAIKey = ['words', 'post'];

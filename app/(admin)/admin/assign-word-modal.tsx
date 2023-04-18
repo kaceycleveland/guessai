@@ -13,9 +13,9 @@ import { Loading } from '@/components/loading';
 import { LoadingBackdrop } from '@/components/loading-backdrop';
 import Modal from '@/components/modal';
 import { BasicModalProps } from '@/components/modal-hooks';
-import { getWordAssignmentsKey } from '@/lib/api/get-word-assignments';
-import { getWords, getWordsKey } from '@/lib/api/get-words';
-import { putWordAssignment, putWordAssignmentKey } from '@/lib/api/put-word-assignment';
+import { getWordAssignmentsKey } from '@/lib/client-api/get-word-assignments';
+import { getWords, getWordsKey } from '@/lib/client-api/get-words';
+import { putWordAssignment, putWordAssignmentKey } from '@/lib/client-api/put-word-assignment';
 import { DATE_FORMAT } from '@/lib/utils/date-format';
 
 interface AssignWordModalProps extends BasicModalProps {

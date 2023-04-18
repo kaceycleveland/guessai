@@ -2,7 +2,7 @@ import { createRouteHandlerSupabaseClient } from '@supabase/auth-helpers-nextjs'
 import { cookies, headers } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
-import { GAME_COOKIE } from '@/lib/api/cookie-game';
+import { GAME_COOKIE } from '@/lib/cookie-game';
 import { createGame } from '@/lib/create-game';
 import { Database } from '@/lib/database.types';
 import { hasPermission } from '@/lib/permissions/has-permission';

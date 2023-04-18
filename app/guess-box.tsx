@@ -8,9 +8,9 @@ import useSWRMutation from 'swr/mutation';
 
 import { Button } from '@/components/button';
 import { Input } from '@/components/input';
-import { GAME_COOKIE } from '@/lib/api/cookie-game';
-import { postGameClue, postGameClueKey } from '@/lib/api/post-game-clue';
-import { postGameGuess, postGameGuessKey } from '@/lib/api/post-guess';
+import { postGameClue, postGameClueKey } from '@/lib/client-api/post-game-clue';
+import { postGameGuess, postGameGuessKey } from '@/lib/client-api/post-guess';
+import { GAME_COOKIE } from '@/lib/cookie-game';
 import { GuessWord } from '@/types/guess-word';
 
 interface GuessBoxProps {

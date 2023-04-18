@@ -7,7 +7,7 @@ import useSWR from 'swr';
 
 import { Loading } from '@/components/loading';
 import useModal from '@/components/modal-hooks';
-import { getWordAssignments, getWordAssignmentsKey } from '@/lib/api/get-word-assignments';
+import { getWordAssignments, getWordAssignmentsKey } from '@/lib/client-api/get-word-assignments';
 import { DATE_FORMAT, parseToDate } from '@/lib/utils/date-format';
 
 import AssignWordModal from './assign-word-modal';
