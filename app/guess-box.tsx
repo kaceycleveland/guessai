@@ -123,8 +123,11 @@ export default function GuessBox({ isClueBlocked, isGuessBlocked, isGameFinished
   }
 
   return (
-    <div className="bg-opacity/90 sticky bottom-4 flex w-full flex-col gap-4 rounded bg-slate-950 p-4 shadow-lg">
-      {bodyContent}
-    </div>
+    <>
+      <div className="h-32 sm:hidden" />
+      <div className="bg-opacity/90 fixed bottom-4 mx-2 flex w-full flex-col gap-4 rounded bg-slate-950 p-4 shadow-lg sm:sticky">
+        {bodyContent}
+      </div>
+    </>
   );
 }
