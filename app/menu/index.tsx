@@ -26,8 +26,10 @@ export default async function Menu() {
             GuessAI
           </h1>
         </Link>
-        <div className="flex items-center gap-4 text-white">
-          <div className="">{secondsUntilTomorrow && <Countdown timeInSeconds={secondsUntilTomorrow} />}</div>
+        <div className="flex items-center gap-2 text-white sm:gap-4">
+          <div className="hidden sm:block">
+            {secondsUntilTomorrow && <Countdown timeInSeconds={secondsUntilTomorrow} />}
+          </div>
           {userData.user?.id ? <AuthedMenu /> : <UnauthedMenu />}
         </div>
       </div>

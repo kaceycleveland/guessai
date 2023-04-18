@@ -6,13 +6,13 @@ import Image from 'next/image';
 const variants: Variants = {
   initial: {
     opacity: 1,
-    y: '-80%',
+    y: '-70%',
     scale: 1,
   },
   hasContent: {
     opacity: 0.3,
     y: '-50%',
-    scale: 0.7,
+    scale: 0.8,
   },
 };
 

@@ -10,7 +10,7 @@ export default function UnauthedMenu() {
   const loginModal = useModal();
   const signUpModal = useModal();
   return (
-    <div className="flex gap-4">
+    <div className="flex gap-2 sm:gap-4">
       <Button onClick={loginModal.openModal}>Login</Button>
       <Button variant="secondary" onClick={signUpModal.openModal}>
         Sign up
