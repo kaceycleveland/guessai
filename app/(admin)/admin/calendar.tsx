@@ -1,10 +1,11 @@
 'use client';
 
 import clsx from 'clsx';
-import { addDays, format } from 'date-fns';
-import { useMemo, useState } from 'react';
+import { addDays, format, subDays } from 'date-fns';
+import { useCallback, useMemo, useState } from 'react';
 import useSWR from 'swr';
 
+import { Button } from '@/components/button';
 import { Loading } from '@/components/loading';
 import useModal from '@/components/modal-hooks';
 import { getWordAssignments, getWordAssignmentsKey } from '@/lib/client-api/get-word-assignments';
@@ -15,7 +16,7 @@ import AssignWordModal from './assign-word-modal';
 const getDates = (startDate: Date, days: number) => {
   return Array(days)
     .fill(1)
-    .map((day, idx) => addDays(startDate, idx));
+    .map((_, idx) => addDays(startDate, idx));
 };
 
 interface CalendarProps {
@@ -23,12 +24,14 @@ interface CalendarProps {
 }
 
 export const Calendar = ({ currentDate }: CalendarProps) => {
-  const parsedCurrentDate = useMemo(() => parseToDate(currentDate), []);
+  const parsedCurrentDate = useMemo(() => parseToDate(currentDate), [currentDate]);
   const modalProps = useModal();
   const [startDate, setStartDate] = useState(parsedCurrentDate);
   const days = useMemo(() => getDates(startDate, 7), [startDate]);
-  const before = useMemo(() => format(days[days.length - 1], DATE_FORMAT), [days]);
   const after = useMemo(() => format(days[0], DATE_FORMAT), [days]);
+  const before = useMemo(() => format(days[days.length - 1], DATE_FORMAT), [days]);
+  const prevPage = useCallback(() => setStartDate(subDays(days[0], 7)), [days]);
+  const nextPage = useCallback(() => setStartDate(addDays(days[days.length - 1], 1)), [days]);
   const { data, isValidating } = useSWR(getWordAssignmentsKey({ before, after }), getWordAssignments);
 
   const [activeDate, setActiveDate] = useState<Date>();
@@ -69,6 +72,10 @@ export const Calendar = ({ currentDate }: CalendarProps) => {
             </div>
           );
         })}
+        <div className="flex w-full gap-4">
+          <Button onClick={prevPage}>Previous</Button>
+          <Button onClick={nextPage}>Next</Button>
+        </div>
       </div>
     </>
   );

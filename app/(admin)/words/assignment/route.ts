@@ -41,10 +41,8 @@ export async function GET(req: NextRequest) {
 
   const words = getWords.data?.length ? getWords.data : undefined;
 
-  if (!words) return NextResponse.error();
-
   const dateReturn: Record<string, { word: string; id: number }[]> = {};
-  words.forEach((wordBody) => {
+  words?.forEach((wordBody) => {
     if (wordBody.date_assignment) {
       if ('length' in wordBody.date_assignment) {
         wordBody.date_assignment.forEach(({ date }) => {
