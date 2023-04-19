@@ -23,6 +23,11 @@ interface CalendarProps {
   currentDate: string;
 }
 
+const wordAssignmentSWROptions = {
+  dedupingInterval: 8000,
+  revalidateOnFocus: false,
+};
+
 export const Calendar = ({ currentDate }: CalendarProps) => {
   const parsedCurrentDate = useMemo(() => parseToDate(currentDate), [currentDate]);
   const modalProps = useModal();
@@ -32,7 +37,11 @@ export const Calendar = ({ currentDate }: CalendarProps) => {
   const before = useMemo(() => format(days[days.length - 1], DATE_FORMAT), [days]);
   const prevPage = useCallback(() => setStartDate(subDays(days[0], 7)), [days]);
   const nextPage = useCallback(() => setStartDate(addDays(days[days.length - 1], 1)), [days]);
-  const { data, isValidating } = useSWR(getWordAssignmentsKey({ before, after }), getWordAssignments);
+  const { data, isValidating } = useSWR(
+    getWordAssignmentsKey({ before, after }),
+    getWordAssignments,
+    wordAssignmentSWROptions
+  );
 
   const [activeDate, setActiveDate] = useState<Date>();
   const activeDateWord = useMemo(() => {
@@ -73,8 +82,12 @@ export const Calendar = ({ currentDate }: CalendarProps) => {
           );
         })}
         <div className="flex w-full gap-4">
-          <Button onClick={prevPage}>Previous</Button>
-          <Button onClick={nextPage}>Next</Button>
+          <Button onClick={prevPage} disabled={isValidating}>
+            Previous
+          </Button>
+          <Button onClick={nextPage} disabled={isValidating}>
+            Next
+          </Button>
         </div>
       </div>
     </>

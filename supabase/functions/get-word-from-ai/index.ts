@@ -2,11 +2,14 @@
 // https://deno.land/manual/getting_started/setup_your_environment
 // This enables autocomplete, go to definition, etc.
 import * as log from 'https://deno.land/std/log/mod.ts';
+import { format, parse } from 'https://deno.land/std@0.168.0/datetime/mod.ts';
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { OpenAI } from 'https://deno.land/x/openai/mod.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 import { corsHeaders } from '../_shared/cors.ts';
+import { Database } from '../_shared/database.types.ts';
+import { narrowItems } from '../_shared/narrow-items.ts';
 import { cleanClues, cleanWord } from './clean-data.ts';
 import { CLEAN_CLUES_PROMPT, DEFAULT_REQUEST_SETTINGS, GET_CLUES_PROMPT, GET_WORD_PROMPT } from './prompts.ts';
 
@@ -21,7 +24,7 @@ serve(async (req) => {
       return new Response('ok', { headers: corsHeaders });
     }
     // Create a Supabase client with the Auth context of the logged in user.
-    const supabaseClient = createClient(
+    const supabaseClient = createClient<Database>(
       // Supabase API URL - env var exported by default.
       Deno.env.get('NEXT_PUBLIC_SUPABASE_URL') ?? '',
       // Supabase API ANON KEY - env var exported by default.
@@ -66,12 +69,44 @@ serve(async (req) => {
       });
     }
 
+    const currentDate = new Date();
+    const pastDate = new Date();
+    pastDate.setDate(currentDate.getDate() - 5);
+    const formattedCurrentDate = format(currentDate, 'yyyy-MM-dd');
+    const formattedPastDate = format(pastDate, 'yyyy-MM-dd');
+
+    log.info(`Date range between ${formattedPastDate} and ${formattedCurrentDate}`);
+
+    const pastWordResults = await supabaseClient
+      .from('date_assignment')
+      .select(
+        `
+        date,
+        words ( word )
+        `
+      )
+      .gte('date', formattedPastDate)
+      .lte('date', formattedCurrentDate);
+
+    if (pastWordResults.error)
+      return new Response(JSON.stringify({ error: 'Issue with getting past words.' }), {
+        headers: sharedHeaders,
+        status: 400,
+      });
+
+    const pastWordsNarrowed = pastWordResults.data
+      .map((pastWord) => narrowItems(pastWord.words))
+      .map((item) => item[0].word);
+    const pastWordsString = pastWordsNarrowed.join(',');
+
+    log.info(`Using past words string (${pastWordsNarrowed.length} words): ` + pastWordsString);
+
     const wordResponse = await openAiClient.createChatCompletion({
       ...DEFAULT_REQUEST_SETTINGS,
       messages: [
         {
           role: 'system',
-          content: GET_WORD_PROMPT,
+          content: GET_WORD_PROMPT(pastWordsString),
         },
       ],
     });
@@ -84,7 +119,9 @@ serve(async (req) => {
         status: 400,
       });
 
+    log.info(`Extracted raw word: ${extractedWord}`);
     const word = cleanWord(extractedWord);
+    log.info(`Cleaned word: ${extractedWord}`);
 
     if (!word)
       return new Response(JSON.stringify({ error: 'Issue with cleaning word.' }), {
@@ -97,7 +134,7 @@ serve(async (req) => {
       messages: [
         {
           role: 'system',
-          content: GET_WORD_PROMPT,
+          content: GET_WORD_PROMPT(pastWordsString),
         },
         {
           role: 'assistant',
@@ -105,7 +142,7 @@ serve(async (req) => {
         },
         {
           role: 'system',
-          content: GET_CLUES_PROMPT,
+          content: GET_CLUES_PROMPT(word),
         },
       ],
     });
@@ -123,7 +160,7 @@ serve(async (req) => {
       messages: [
         {
           role: 'system',
-          content: GET_WORD_PROMPT,
+          content: GET_WORD_PROMPT(pastWordsString),
         },
         {
           role: 'assistant',
@@ -131,7 +168,7 @@ serve(async (req) => {
         },
         {
           role: 'system',
-          content: GET_CLUES_PROMPT,
+          content: GET_CLUES_PROMPT(word),
         },
         {
           role: 'assistant',
@@ -139,7 +176,7 @@ serve(async (req) => {
         },
         {
           role: 'system',
-          content: CLEAN_CLUES_PROMPT,
+          content: CLEAN_CLUES_PROMPT(word),
         },
       ],
     });

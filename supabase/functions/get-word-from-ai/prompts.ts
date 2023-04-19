@@ -7,26 +7,34 @@ export const DEFAULT_REQUEST_SETTINGS: Omit<ChatCompletionOptions, 'messages'> =
   maxTokens: 500,
 };
 
-export const GET_WORD_PROMPT = `
-Give me a word that is a noun.
-The word must be between 4 and 10 letters.
+export const GET_WORD_PROMPT = (wordList: string) => `
+You are a word guessing game generator.
+You can come up with unique words and clues to go with those words.
+All of your words must be nouns.
 The word must be appropriate for all ages.
 The word must have a unique origin.
+The word must not be any word in this list:
+${wordList}
+
+Give just a generated word with no clues to start.
+Your word must be between 4 and 10 characters long.
+You will only respond with the word by itself.
+Your generated word is:
 `;
 
-export const GET_CLUES_PROMPT = `
-Generate 15 clues for someone guessing that word.
-Each clue must focus specifically on the origin of the word.
-Order the clues in order of difficulty.
-Do not number the clues and separate each clue by a new line.
-Write the clues out with the given requirements below:
+export const GET_CLUES_PROMPT = (word: string) => `
+Now generate 15 clues for someone guessing the word you gave me '${word}'.
+Your clues must focus specifically on the origin of the word '${word}'.
+Your clues must focus on describing the word '${word}'.
+Your clues must start or end with the text "this word".
+Your clues must not use any word that is similar or the same as '${word}'.
+Your clues must not use the word '${word}' or any similar words it pertain to in the clues themselves.
+Create your clues for the word '${word}' below:
 `;
 
-export const CLEAN_CLUES_PROMPT = `
-Order the clues in order of guessing difficulty.
-Remove any numbering or bullet points prepended to the clues.
-Only give the clues by themselves.
-Remove any clues that include any words similar to the word.
-Have each clue be a max of two sentences long.
-Write the clues out with the given requirements below:
+export const CLEAN_CLUES_PROMPT = (word: string) => `
+Remove any numbering or bullet points prepended to your clues you outputted.
+Separate each of your clues to be on new lines.
+Remove any clues that include any words similar to the word '${word}'.
+List out the formatted clues below:
 `;
