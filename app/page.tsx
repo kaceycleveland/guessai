@@ -143,7 +143,7 @@ export default async function Page() {
   const isGuessBlocked = recentClue.guesses?.length === recentClue.clue.max_attempts;
 
   return (
-    <div className="relative flex w-full max-w-4xl flex-col items-center gap-4">
+    <div className="relative flex w-full max-w-4xl flex-1 flex-col items-center gap-4">
       <RobotImage hasContent={Boolean(clues.length > 1 || (clues?.[0].guesses && clues?.[0].guesses.length > 0))} />
       {/* @ts-ignore */}
       {totalCluesAvailable && <Clues clues={clues} total={totalCluesAvailable} />}
